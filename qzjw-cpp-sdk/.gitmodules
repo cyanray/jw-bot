@@ -1,0 +1,3 @@
+[submodule "CURLWrapper"]
+	path = CURLWrapper
+	url = https://github.com/cyanray/CURLWrapper

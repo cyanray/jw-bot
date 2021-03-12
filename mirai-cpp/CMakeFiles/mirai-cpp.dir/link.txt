@@ -1,0 +1,2 @@
+/usr/bin/ar qc libmirai-cpp.a  CMakeFiles/mirai-cpp.dir/src/event_func.cpp.o CMakeFiles/mirai-cpp.dir/src/message_chain.cpp.o CMakeFiles/mirai-cpp.dir/src/mirai_bot.cpp.o
+/usr/bin/ranlib libmirai-cpp.a

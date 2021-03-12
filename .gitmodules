@@ -1,0 +1,9 @@
+[submodule "qzjw-cpp-sdk"]
+	path = qzjw-cpp-sdk
+	url = https://github.com/cyanray/qzjw-cpp-sdk.git
+[submodule "mirai-cpp"]
+	path = mirai-cpp
+	url = https://github.com/cyanray/mirai-cpp
+[submodule "HTMLReader"]
+	path = HTMLReader
+	url = https://github.com/cyanray/HTMLReader

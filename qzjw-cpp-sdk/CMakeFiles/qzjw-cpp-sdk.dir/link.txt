@@ -1,0 +1,2 @@
+/usr/bin/ar qc libqzjw-cpp-sdk.a  CMakeFiles/qzjw-cpp-sdk.dir/src/qzjw.cpp.o
+/usr/bin/ranlib libqzjw-cpp-sdk.a
