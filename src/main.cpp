@@ -6,8 +6,13 @@
 #include <mirai.h>
 #include <qzjw.h>
 #include <nlohmann/json.hpp>
+
+#include <glog/logging.h>
+
 #include "main.h"
 #include "database.h"
+
+#undef ERROR		// hack: fu*k windows.h
 using namespace std;
 using namespace Cyan;
 using namespace cyanray;
@@ -20,15 +25,19 @@ NewsDatabase NewsDb;
 SQLite::Database RankDb("rank.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
 json AppConfig;
 
-int main()
+int main(int argc, char* argv[])
 {
 #if defined(_WIN32) || defined(WIN32)
 	system("chcp 65001");
 #endif
 
+	google::InitGoogleLogging(argv[0]);
+	FLAGS_logtostderr = 1;
+
 	try
 	{
 		// 读取配置文件
+		LOG(INFO) << "读取配置文件...";
 		stringstream config_ss;
 		if (!filesystem::exists("config.json"))
 		{
@@ -37,7 +46,7 @@ int main()
 		fstream config_file("config.json", ios::in | ios::out);
 		if (!config_file)
 		{
-			cout << "打开配置文件失败" << endl;
+			LOG(ERROR) << "打开配置文件失败!";
 			return -1;
 		}
 		config_ss << config_file.rdbuf();
@@ -58,7 +67,7 @@ int main()
 			};
 			config_file.clear();
 			config_file << AppConfig.dump();
-			cout << "没有找到配置文件，已生成默认配置文件，请修改。" << endl;
+			LOG(ERROR) << "没有找到配置文件，已生成默认配置文件，请修改后重新运行本程序!";
 			config_file.close();
 			return 1;
 		}
@@ -67,42 +76,45 @@ int main()
 	}
 	catch (const exception& ex)
 	{
-		cout << "读取配置文件时出现异常：" << ex.what() << endl;
+		LOG(ERROR) << "读取配置文件时出现异常：" << ex.what();
 		return -1;
 	}
 
 	for (auto it = AppConfig.cbegin(); it != AppConfig.cend(); ++it)
 	{
-		cout << it.key() << " : " << it.value() << endl;
+		LOG(INFO) << "配置: " << it.key() << " : " << it.value();
 	}
-	cout << endl;
 
 	JwApi = Jw(AppConfig["QzJwApiPrefix"]);
 	try
 	{
+		LOG(INFO) << "登录教务网中...";
 		JwApi.Login(AppConfig["QzJwAdminUid"], AppConfig["QzJwAdminPwd"]);
+		LOG(INFO) << "成功登录教务网!";
 	}
 	catch (const exception& ex)
 	{
-		cout << "登录教务网出错: " << ex.what() << endl;
+		LOG(ERROR) << "登录教务网出错: " << ex.what();
 	}
 
 	MiraiBot bot(AppConfig["MiraiApiHost"], AppConfig["MiraiApiPort"]);
-
 	while (true)
 	{
 		try
 		{
+			LOG(INFO) << "尝试连接 mirai...";
 			bot.Auth(AppConfig["AuthKey"], QQ_t(AppConfig["BotQQ"]));
+			LOG(INFO) << "连接 mirai 成功!";
 			break;
 		}
 		catch (const std::exception& ex)
 		{
-			cout << ex.what() << endl;
+			LOG(ERROR) << "连接 mirai 时出现错误: " << ex.what();
 		}
 		MiraiBot::SleepSeconds(1);
 	}
-	cout << "Bot Working..." << endl;
+
+	LOG(INFO) << "Bot Working...";
 
 	// 监听一系列事件...
 
@@ -190,7 +202,10 @@ int main()
 
 	auto f3 = std::async(std::launch::async, [&]() { CronJobLoginJw(bot); });
 
-	bot.EventLoop();
+	bot.EventLoop([](const char* error_msg) 
+		{
+			LOG(WARNING) << "接受 mirai 事件时出现错误: " << error_msg;
+		});
 
 	return 0;
 }
