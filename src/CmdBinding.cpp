@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <sstream>
 #include <string_view>
+#include <glog/logging.h>
 #include "main.h"
 using namespace std;
 using namespace Cyan;
@@ -14,12 +15,13 @@ void CmdBinding(Message m)
 
 	try
 	{
-
+		LOG(INFO) << "[" << m.Sender.ToInt64() << "] 使用 [绑定学号] 指令";
 		regex pattern(R"((绑定学号).*?(63\d{10}))");
 		smatch match;
 		regex_search(msg_str, match, pattern);
 		if (match.size() < 3)
 		{
+			LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用了不正确的 [绑定学号] 指令: " << msg_str;
 			m.Reply(MessageChain().Plain("正确格式: 绑定学号+空格+学号\n例如：“绑定学号 631805010000”"));
 			return;
 		}
@@ -35,6 +37,7 @@ void CmdBinding(Message m)
 
 		for (int week_count = 1; week_count <= 20; week_count++)
 		{
+			LOG(INFO) << "[" << m.Sender.ToInt64() << "] 获取第 " << week_count << " 周的课表...";
 			if (week_count % 5 == 1)
 			{
 				m.Reply(MessageChain()
@@ -66,19 +69,19 @@ void CmdBinding(Message m)
 				UserDb.InsertCourse(m.Sender, c.Name, c.Classroom, c.StartTime, c.EndTime, week_count, c.Week);
 			}
 		}
-
+		LOG(INFO) << "[" << m.Sender.ToInt64() << "] 绑定学号成功!";
 		m.Reply(MessageChain().Plain("绑定学号成功!"));
 	}
 	catch (const std::exception& ex)
 	{
-		cout << ex.what() << endl;	// TODO: log
+		LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用 [绑定学号] 指令时出现异常: " << ex.what();
 		try
 		{
 			m.Reply(MessageChain().Plain("绑定学号失败, 请稍后重试！\n错误原因: \n").Plain(ex.what()));
 		}
 		catch (const std::exception& ex)
 		{
-			cout << ex.what() << endl;	// TODO: log
+			LOG(INFO) << "[" << m.Sender.ToInt64() << "] 使用 [绑定学号] 指令时出现异常: " << ex.what();
 		}
 	}
 
