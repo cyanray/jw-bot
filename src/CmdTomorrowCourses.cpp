@@ -18,15 +18,16 @@ void CmdTomorrowCourses(Message m)
 		}
 
 		// GetWeek()范围为[1,20]
-		int week = GetWeekOfSemester();		// 获取本学期第几周
+		int week_of_semester = GetWeekOfSemester();		// 获取本学期第几周
 		// 获取明天是星期几
-		int weekday = GetWeekToday() + 1;
-		if (weekday >= 7)
+		int week = GetWeekToday() + 1;
+		// 如果在星期天使用明天课表，那么应该返回下周一的课表
+		if (week > 7)
 		{
-			weekday = 1;
-			week = ( week + 1) % 21;
+			week = 1;
+			week_of_semester = ( week_of_semester + 1) % 21;
 		}
-		auto today_courses = UserDb.GetCourses(m.Sender, week, weekday);
+		auto today_courses = UserDb.GetCourses(m.Sender, week_of_semester, week);
 
 		MessageChain mc;
 		int count = today_courses.size();
