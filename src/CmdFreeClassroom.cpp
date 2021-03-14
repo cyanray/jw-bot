@@ -2,6 +2,7 @@
 #include <string>
 #include <string_view>
 #include <sstream>
+#include <glog/logging.h>
 #include "main.h"
 using namespace std;
 using namespace Cyan;
@@ -18,6 +19,8 @@ void CmdFreeClassroom(Message m)
 		{
 			return;
 		}
+
+		LOG(INFO) << "[" << m.Sender.ToInt64() << "] 使用 [查空教室] 指令: " << msg_str;
 
 		string date = GetCurrentDate();
 		string campus_id = "02";
@@ -109,12 +112,14 @@ void CmdFreeClassroom(Message m)
 	}
 	catch (const std::exception& ex)
 	{
+		LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用 [查空教室] 指令时出现异常: " << ex.what();
 		try
 		{
 			m.Reply(MessageChain().Plain("出现错误："s + ex.what()));
 		}
-		catch (...)
+		catch (const exception& ex)
 		{
+			LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用 [查空教室] 指令时出现异常: " << ex.what();
 		}
 	}
 
