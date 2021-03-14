@@ -9,7 +9,7 @@ void CmdUnbinding(Message m)
 {
 	if (m.MessageChain.GetPlainTextFirst() != "解除绑定学号") return;
 
-	LOG(INFO) << "[" << m.Sender.ToInt64() << "] 使用 [解除绑定学号]";
+	LOG(INFO) << "[" << m.Sender.ToInt64() << "] 使用 [解除绑定学号] 指令";
 
 	try
 	{
