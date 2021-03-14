@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <sstream>
 #include "main.h"
+#include <glog/logging.h>
 using namespace std;
 using namespace Cyan;
 
@@ -10,6 +11,8 @@ void CmdSubscribeMorning(Message m)
 	{
 		if (m.MessageChain.GetPlainTextFirst() == "订阅每日课表")
 		{
+			LOG(INFO) << "[" << m.Sender.ToInt64() << "] 使用 [订阅每日课表] 指令";
+
 			if (UserDb.GetSid(m.Sender).empty())
 			{
 				m.Reply(MessageChain().Plain(UNKNOWN_SCHOOL_ID_MSG));
@@ -22,9 +25,11 @@ void CmdSubscribeMorning(Message m)
 
 		if (m.MessageChain.GetPlainTextFirst() == "取消订阅每日课表")
 		{
+			LOG(INFO) << "[" << m.Sender.ToInt64() << "] 使用 [取消订阅每日课表] 指令";
+
 			if (UserDb.GetSid(m.Sender).empty())
 			{
-				m.Reply(MessageChain().Plain("🙄我还不知道你的学号! 回复 \"绑定学号+空格+学号\" 启动本功能"));
+				m.Reply(MessageChain().Plain(UNKNOWN_SCHOOL_ID_MSG));
 				return;
 			}
 			UserDb.UpdateMorningSubscription(m.Sender, 0);
@@ -34,12 +39,14 @@ void CmdSubscribeMorning(Message m)
 	}
 	catch (const std::exception& ex)
 	{
+		LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用 [(取消)订阅每日课表] 指令时出现异常: " << ex.what();
 		try
 		{
 			m.Reply(MessageChain().Plain("出现错误："s + ex.what()));
 		}
-		catch (...)
+		catch (const exception& ex)
 		{
+			LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用 [(取消)订阅每日课表] 指令时出现异常: " << ex.what();
 		}
 	}
 }
