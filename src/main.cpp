@@ -7,12 +7,9 @@
 #include <qzjw.h>
 #include <nlohmann/json.hpp>
 
-#include <glog/logging.h>
-
 #include "main.h"
 #include "database.h"
 
-#undef ERROR		// hack: fu*k windows.h
 using namespace std;
 using namespace Cyan;
 using namespace cyanray;
