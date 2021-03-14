@@ -13,7 +13,7 @@ void CmdTomorrowCourses(Message m)
 	{
 		if (UserDb.GetSid(m.Sender).empty())
 		{
-			m.Reply(MessageChain().Plain("没有查到你的课表，回复 \"绑定学号\" 启动本功能"));
+			m.Reply(MessageChain().Plain(UNKNOWN_SCHOOL_ID_MSG));
 			return;
 		}
 

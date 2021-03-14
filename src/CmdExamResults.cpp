@@ -13,7 +13,7 @@ void CmdExamResult(Message m)
 	{
 		if (UserDb.GetSid(m.Sender).empty())
 		{
-			m.Reply(MessageChain().Plain("🙄我还不知道你的学号! 回复 \"绑定学号+空格+学号\" 启动本功能"));
+			m.Reply(MessageChain().Plain(UNKNOWN_SCHOOL_ID_MSG));
 			return;
 		}
 		string schoolId = UserDb.GetSid(m.Sender);

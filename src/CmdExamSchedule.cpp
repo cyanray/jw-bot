@@ -8,11 +8,10 @@ using namespace cyanray;
 void CmdExamSchedule(Message m)
 {
 	if (m.MessageChain.GetPlainTextFirst() != "考试安排") return;
-	// m.Reply(MessageChain().Plain("该功能暂停使用")); return;
 
 	if (UserDb.GetSid(m.Sender).empty())
 	{
-		m.Reply(MessageChain().Plain("🙄我还不知道你的学号! 回复 \"绑定学号+空格+学号\" 启动本功能"));
+		m.Reply(MessageChain().Plain(UNKNOWN_SCHOOL_ID_MSG));
 		return;
 	}
 	string schoolId = UserDb.GetSid(m.Sender);
