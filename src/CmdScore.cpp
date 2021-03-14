@@ -2,12 +2,15 @@
 #include <sstream>
 #include <iomanip>
 #include "main.h"
+#include <glog/logging.h>
 using namespace std;
 using namespace Cyan;
 
 void CmdScore(Message m)
 {
 	if (m.MessageChain.GetPlainTextFirst() != "查绩点") return;
+
+	LOG(INFO) << "[" << m.Sender.ToInt64() << "] 使用 [查绩点] 指令";
 
 	try
 	{
@@ -97,14 +100,14 @@ void CmdScore(Message m)
 	}
 	catch (const std::exception& ex)
 	{
+		LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用 [查绩点] 指令时出现异常: " << ex.what();
 		try
 		{
 			m.Reply(MessageChain().Plain("出现错误："s + ex.what()));
 		}
-		catch (...)
+		catch (const exception& ex)
 		{
+			LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用 [查绩点] 指令时出现异常: " << ex.what();
 		}
 	}
-
-
 }

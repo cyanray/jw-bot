@@ -5,8 +5,9 @@ project(jw-bot)
 set(CMAKE_CXX_STANDARD 20)
 
 find_package(nlohmann_json CONFIG REQUIRED)
-find_package(unofficial-sqlite3)
-find_package(SQLiteCpp)
+find_package(unofficial-sqlite3 CONFIG REQUIRED)
+find_package(SQLiteCpp CONFIG REQUIRED)
+find_package(glog CONFIG REQUIRED)
 
 # 不要构建 mirai-cpp 自带的 examples
 set(MIRAI_CPP_BUILD_EXAMPLES OFF CACHE BOOL "Build examples" FORCE)
@@ -36,6 +37,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE mirai-cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json)
 target_link_libraries(${PROJECT_NAME} PRIVATE unofficial::sqlite3::sqlite3)
 target_link_libraries(${PROJECT_NAME} PRIVATE SQLiteCpp)
+target_link_libraries(${PROJECT_NAME} PRIVATE glog::glog)
 target_link_libraries(${PROJECT_NAME} PRIVATE HTMLReader)
 target_compile_definitions(${PROJECT_NAME} PRIVATE MIRAICPP_STATICLIB)
 

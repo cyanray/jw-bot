@@ -6,6 +6,8 @@
 #include <mirai.h>
 #include <qzjw.h>
 #include <nlohmann/json.hpp>
+#include <glog/logging.h>
+#undef ERROR		// hack: fu*k windows.h
 #include "database.h"
 
 /**

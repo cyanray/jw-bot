@@ -19,9 +19,12 @@ void CronJobMorning(Cyan::MiraiBot& bot)
 
 		if (hour == 6)
 		{
+			LOG(INFO) << "准备发送每日课表...";
+
 			int week_of_semester = GetWeekOfSemester();			// 获取本学期第几周
 			int week = GetWeekToday();							// 获取今天是星期几
 			vector<QQ_t> users = UserDb.GetMorningSubscribers();
+			LOG(INFO) << "需要给 " << users.size() << "位同学发送课表";
 			for (auto user : users)
 			{
 				try
@@ -44,6 +47,8 @@ void CronJobMorning(Cyan::MiraiBot& bot)
 
 					bot.SendMessage(user, mc);
 
+					LOG(INFO) << "给 [" << user.ToInt64() << "] 同学发送早安课表成功!";
+
 					for (const auto& ele : today_courses)
 					{
 						string name = ele.Name;
@@ -61,7 +66,7 @@ void CronJobMorning(Cyan::MiraiBot& bot)
 				}
 				catch (const std::exception& ex)
 				{
-					std::cout << "每日课表出现异常: " << ex.what() << std::endl;
+					LOG(INFO) << "给 [" << user.ToInt64() << "] 同学发送早安课表时出现异常: " << ex.what();
 				}
 				std::this_thread::sleep_for(std::chrono::seconds(3));
 			}

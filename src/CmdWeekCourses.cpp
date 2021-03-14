@@ -1,13 +1,16 @@
 #include <iostream>
 #include <sstream>
 #include "main.h"
+#include <glog/logging.h>
 using namespace std;
 using namespace Cyan;
 
 void CmdWeekCourses(Message m)
 {
-	if (m.MessageChain.GetPlainTextFirst() != "本周课表")
-		return;
+	if (m.MessageChain.GetPlainTextFirst() != "本周课表") return;
+
+	LOG(INFO) << "[" << m.Sender.ToInt64() << "] 使用 [本周课表] 指令";
+
 	const static string weekdayStr[7] = { "星期一","星期二","星期三","星期四","星期五","星期六","星期天" };
 	try
 	{
@@ -42,12 +45,14 @@ void CmdWeekCourses(Message m)
 	}
 	catch (const std::exception& ex)
 	{
+		LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用 [本周课表] 指令时出现异常: " << ex.what();
 		try
 		{
 			m.Reply(MessageChain().Plain("出现错误："s + ex.what()));
 		}
-		catch (...)
+		catch (const exception& ex)
 		{
+			LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用 [本周课表] 指令时出现异常: " << ex.what();
 		}
 	}
 }

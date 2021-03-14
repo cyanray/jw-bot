@@ -1,18 +1,22 @@
 #include <iostream>
 #include <sstream>
 #include "main.h"
+#include <glog/logging.h>
 using namespace std;
 using namespace Cyan;
 
 void CmdTodayCourses(Message m)
 {
 	string txt = m.MessageChain.GetPlainTextFirst();
-	if (txt != "查课表" && txt != "课表" && txt != "今天课表" && txt != "今日课表")
-		return;
+	if (txt != "查课表" && txt != "课表" && txt != "今天课表" && txt != "今日课表") return;
+
+	LOG(INFO) << "[" << m.Sender.ToInt64() << "] 使用 [今日课表] 指令: " << txt;
+
 	try
 	{
 		if (UserDb.GetSid(m.Sender).empty())
 		{
+			LOG(INFO) << "[" << m.Sender.ToInt64() << "] 使用 [今日课表] 指令时出现错误: 没有找到学号!";
 			m.Reply(MessageChain().Plain(UNKNOWN_SCHOOL_ID_MSG));
 			return;
 		}
@@ -39,12 +43,14 @@ void CmdTodayCourses(Message m)
 	}
 	catch (const std::exception& ex)
 	{
+		LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用 [今日课表] 指令时出现异常: " << ex.what();
 		try
 		{
 			m.Reply(MessageChain().Plain("出现错误："s + ex.what()));
 		}
-		catch (...)
+		catch (const exception& ex)
 		{
+			LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用 [今日课表] 指令时出现异常: " << ex.what();
 		}
 	}
 }
