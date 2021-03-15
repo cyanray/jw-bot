@@ -13,11 +13,11 @@ void CronJobMorning(Cyan::MiraiBot& bot)
 	{
 		int hour = GetHour24();
 
-		// 如果到了6点 就给发早安，然后延迟61分钟
-		// 如果没到6点 就延迟1分钟再次检测
+		// 如果到了5点 就给发早安，然后延迟61分钟
+		// 如果没到5点 就延迟1分钟再次检测
 		int next_sleep_time = 1;
 
-		if (hour == 6)
+		if (hour == 5)
 		{
 			LOG(INFO) << "准备发送每日课表...";
 
