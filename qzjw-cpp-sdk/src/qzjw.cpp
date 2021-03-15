@@ -235,10 +235,41 @@ namespace cyanray
 			es.CampusName = ele["xqmc"].get<string>();
 			es.BuildingName = ele["jzwmc"].get<string>();
 			es.Capacity = ele["zws"].get<int>();
+			es.Floor = GetFloor(es.ClassroomName, es.BuildingName);
 			res.push_back(es);
 		}
 		return res;
 
+	}
+
+	string Jw::GetFloor(string classroomName, string buildingName)
+	{
+		string floor = "0";
+		string_view bName_view(buildingName);
+
+		//A01教学楼，则直接取教室的第4个字符
+		if (bName_view.starts_with("A01")) {
+			floor = classroomName[3];
+			if (floor == "B")  //如果是B(先当做0楼)
+				floor = "0";
+		}
+		else { //二教或三教
+
+			//教室名以2或3开头，直接取教室的第3个字符
+			if (classroomName[0] == '2' || classroomName[0] == '3') {
+				floor = classroomName[2];
+			}
+			else if (classroomName[0] == 'P') { //教室为PC机房
+				floor = classroomName[7];
+			}
+			else {  //取楼的往后第3个字符(中文占3个字符)
+					//（如建筑学专业教室2[第二教学楼1楼]）
+				floor = classroomName.substr(classroomName.find("楼") + 3, 1);
+			}
+
+		}
+
+		return floor;
 	}
 
 }

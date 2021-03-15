@@ -25,6 +25,7 @@ void CmdFreeClassroom(Message m)
 		string date = GetCurrentDate();
 		string campus_id = "02";
 		string building_id = "0201";
+		string floor = "0";  //0为全楼
 		Jw::FreeTime free_time = Jw::FreeTime::AllDay;
 
 		if (msg_view.find("明天") != msg_view.npos)
@@ -70,11 +71,41 @@ void CmdFreeClassroom(Message m)
 			free_time = Jw::FreeTime::Night;
 		}
 
+		if (msg_view.find("1楼") != msg_view.npos || msg_view.find("一楼") != msg_view.npos)
+		{
+			floor = "1";
+		}
+		if (msg_view.find("2楼") != msg_view.npos || msg_view.find("二楼") != msg_view.npos)
+		{
+			floor = "2";
+		}
+		if (msg_view.find("3楼") != msg_view.npos || msg_view.find("三楼") != msg_view.npos)
+		{
+			floor = "3";
+		}
+		if (msg_view.find("4楼") != msg_view.npos || msg_view.find("四楼") != msg_view.npos)
+		{
+			floor = "4";
+		}
+		if (msg_view.find("5楼") != msg_view.npos || msg_view.find("五楼") != msg_view.npos)
+		{
+			floor = "5";
+		}
 
 		auto result = JwApi.GetFreeClassroom(date, free_time, campus_id, building_id);
 
 		// 最多显示 100 个教室(20条消息)
 		auto len = min(result.size(), size_t(100));
+
+		//选择了楼层选项，则进行楼层筛选
+		if (floor != "0")
+			for (auto iter = result.begin(); iter != result.end(); iter++) {
+				//不是B层 并且 不是需要的楼层,就删除
+				if (iter->Floor != "0" && iter->Floor != floor) {
+					iter = result.erase(iter);
+					iter--;
+				}
+			}
 
 		if (result.empty())
 		{
