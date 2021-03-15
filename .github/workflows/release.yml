@@ -38,6 +38,10 @@ jobs:
         cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
         useVcpkgToolchainFile: true
         buildDirectory: '${{ github.workspace }}/build'
-        cmakeAppendedArgs: '-DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_C_COMPILER=gcc-10 -DCMAKE_CXX_COMPILER=g++-10'
+        cmakeAppendedArgs: '-DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_C_COMPILER=gcc-10 -DCMAKE_CXX_COMPILER=g++-10 -DEXECUTABLE_OUTPUT_PATH="${{ github.workspace }}/bin"'
         buildWithCMake: true
-
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v2
+      with: 
+        name: jw-bot-publish
+        path: "${{ github.workspace }}/bin"
