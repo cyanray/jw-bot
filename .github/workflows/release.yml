@@ -18,7 +18,7 @@ jobs:
       uses: lukka/run-vcpkg@main
       id: runvcpkg
       with:
-        vcpkgArguments: 'nlohmann-json:x64-linux sqlite3:x64-linux SQLiteCpp:x64-linux glog:x64-linux'
+        vcpkgArguments: 'nlohmann-json:x64-linux sqlite3:x64-linux SQLiteCpp:x64-linux glog:x64-linux curl:x64-linux'
         vcpkgTriplet: 'x64-linux'
         vcpkgDirectory: '${{ github.workspace }}/vcpkg'
         vcpkgGitCommitId: '30124253eecff36bc90f73341edbfb4f845e2a1e'
