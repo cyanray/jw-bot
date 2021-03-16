@@ -323,4 +323,32 @@ inline Cyan::MessageChain CoursesFormat(const vector<Cyan::UserDatabase::Course>
 	return mc;
 }
 
+/**
+ * @brief 计算GPA
+ * @param res [IN]: 考试结果
+ * @param GPA [OUT]: GPA 的结果
+ * @param GPA_require_only  [OUT]: 排除校选课的 GPA 的结果
+*/
+inline void CalcGPA(const std::vector<cyanray::Jw::ExamResult>& res, double& GPA, double& GPA_require_only)
+{
+	GPA = 0;
+	GPA_require_only = 0;
+	double credit_sum = 0, credit_sum_require_only = 0;
+	for (auto&& exam : res)
+	{
+		if (exam.CourseCategory != "校选")
+		{
+			double t = ScoreToGradePoint(exam.Score);
+			GPA_require_only += t * exam.Credit;
+			credit_sum_require_only += exam.Credit;
+		}
+
+		double t = ScoreToGradePoint(exam.Score);
+		GPA += t * exam.Credit;
+		credit_sum += exam.Credit;
+	}
+	GPA = GPA / credit_sum;
+	GPA_require_only = GPA_require_only / credit_sum_require_only;
+}
+
 #endif // !jw_bot_main_h_H_
