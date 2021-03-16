@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <nlohmann/json.hpp>
 #include <CURLWrapper.h>
+#include <regex>
 using namespace Cyan;
 using std::stringstream;
 using std::runtime_error;
@@ -235,10 +236,28 @@ namespace cyanray
 			es.CampusName = ele["xqmc"].get<string>();
 			es.BuildingName = ele["jzwmc"].get<string>();
 			es.Capacity = ele["zws"].get<int>();
+			es.Floor = GetFloor(es.ClassroomName);
 			res.push_back(es);
 		}
 		return res;
 
+	}
+
+	int Jw::GetFloor(const string& classroomName)
+	{
+		string classroom = classroomName + " ";
+		int result = -1;
+		regex pattern(R"((A01|20|30|第二教学楼|\[)(\d)(\d\d\D|楼))");
+
+		std::smatch matches;
+
+		if (regex_search(classroom, matches, pattern)) 
+		{
+			stringstream ss(matches.str(2));
+			ss >> result;
+		}
+
+		return result;
 	}
 
 }

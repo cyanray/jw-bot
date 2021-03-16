@@ -68,6 +68,7 @@ namespace cyanray
 			int Capacity;
 			string CampusName;
 			string BuildingName;
+			int Floor;  //楼层
 		};
 
 		enum class FreeTime
@@ -126,6 +127,13 @@ namespace cyanray
 		}
 
 		vector<FreeClassroom> GetFreeClassroom(const string& date, FreeTime freeTime, const string& campus_id, const string& building_id);
+
+		/**
+		* @brief 根据教室名获取楼层
+		* @param classroom 教室名
+		* @return 楼层号
+		*/
+		int GetFloor(const string& classroom);
 
 	private:
 		string api_prefix_;
