@@ -1,0 +1,41 @@
+name: Build
+
+on: [push, pull_request]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+            # Install latest CMake.
+    - uses: lukka/get-cmake@latest
+
+    - name: Restore artifacts, or run vcpkg, build and cache artifacts
+      uses: lukka/run-vcpkg@main
+      id: runvcpkg
+      with:
+        vcpkgArguments: 'nlohmann-json:x64-linux sqlite3:x64-linux SQLiteCpp:x64-linux glog:x64-linux curl:x64-linux'
+        vcpkgTriplet: 'x64-linux'
+        vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+        vcpkgGitCommitId: '30124253eecff36bc90f73341edbfb4f845e2a1e'
+    - name: Prints output of run-vcpkg's task
+      run: echo "root='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}', triplet='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_TRIPLET_OUT }}' "
+
+    - name: Install gcc-10
+      shell: bash
+      run: |
+           sudo apt update
+           sudo apt install gcc-10 g++-10
+    - name: Run CMake
+      uses: lukka/run-cmake@main
+      with:
+        cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
+        cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
+        useVcpkgToolchainFile: true
+        buildDirectory: '${{ github.workspace }}/build'
+        cmakeAppendedArgs: '-DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_SHARED_LIBS=OFF  -DCMAKE_EXE_LINKER_FLAGS="-static"  -DCMAKE_C_COMPILER=gcc-10 -DCMAKE_CXX_COMPILER=g++-10 -DEXECUTABLE_OUTPUT_PATH="${{ github.workspace }}/bin"'
+        buildWithCMake: true
