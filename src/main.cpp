@@ -59,7 +59,8 @@ int main(int argc, char* argv[])
 				{"JwUid", "631800000000"},
 				{"JwPassword", "pwd123456"},
 				{"FirstDayOfSemester", 1582473600ll},
-				{"GoodMorningEnabled", true}
+				{"GoodMorningEnabled", true},
+				{"GoodMorningTriggerTime", 5}
 			};
 			config_file.clear();
 			config_file << AppConfig.dump(2, ' ');
