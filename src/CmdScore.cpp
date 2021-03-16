@@ -41,24 +41,24 @@ void CmdScore(Message m)
 		}
 
 
-		vector<cyanray::Jw::ExamResult> exam_result_tmp;
-		vector<cyanray::Jw::ExamResult> exam_result_all;
+		vector<cyanray::Jw::ExamResult> exam_results_tmp;
+		vector<cyanray::Jw::ExamResult> exam_results_all;
 		for (int i = 0; i < semesters.size(); ++i)
 		{
 			auto tmp = JwApi.GetExamResult(schoolId, semesters[i]);
-			exam_result_tmp.insert(exam_result_tmp.end(), tmp.begin(), tmp.end());
-			exam_result_all.insert(exam_result_all.end(), tmp.begin(), tmp.end());
+			exam_results_tmp.insert(exam_results_tmp.end(), tmp.begin(), tmp.end());
+			exam_results_all.insert(exam_results_all.end(), tmp.begin(), tmp.end());
 
 			if (i % 2 || semesters[i] == GetThisSemester())
 			{
-				if (exam_result_tmp.empty())
+				if (exam_results_tmp.empty())
 				{
 					m.Reply(MessageChain().Plain("没有查到你的成绩，你是否已被退学？"));
 					return;
 				}
 
 				double GPA = 0, GPA_require_only = 0;
-				CalcGPA(exam_result_tmp, GPA, GPA_require_only);
+				CalcGPA(exam_results_tmp, GPA, GPA_require_only);
 
 				stringstream ss1;
 				ss1 << fixed << setprecision(2) << GPA_require_only;
@@ -70,13 +70,13 @@ void CmdScore(Message m)
 					.Plain("平均学分绩点(排除校选)：【").Plain(ss1.str()).Plain("】\n")
 					.Plain("平均学分绩点(所有科目)：【").Plain(ss2.str()).Plain("】");
 				m.Reply(mc);
-				exam_result_tmp.clear();
+				exam_results_tmp.clear();
 			}
 			if (semesters[i] == GetThisSemester()) break;
 		}
 
 		double GPA = 0, GPA_require_only = 0;
-		CalcGPA(exam_result_all, GPA, GPA_require_only);
+		CalcGPA(exam_results_all, GPA, GPA_require_only);
 
 		stringstream ss1;
 		ss1 << fixed << setprecision(2) << GPA_require_only;
