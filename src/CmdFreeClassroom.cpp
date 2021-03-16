@@ -3,6 +3,7 @@
 #include <string_view>
 #include <sstream>
 #include <glog/logging.h>
+#include <algorithm>
 #include "main.h"
 using namespace std;
 using namespace Cyan;
@@ -15,7 +16,7 @@ void CmdFreeClassroom(Message m)
 	{
 		string msg_str = m.MessageChain.GetPlainTextFirst();
 		string_view msg_view(msg_str);
-		if (!msg_view.starts_with("空教室") && !msg_view.starts_with("查空教室"))
+		if (msg_view.find("空教室") == msg_view.npos)
 		{
 			return;
 		}
@@ -91,6 +92,23 @@ void CmdFreeClassroom(Message m)
 		{
 			floor = 5;
 		}
+		if (msg_view.find("6楼") != msg_view.npos || msg_view.find("六楼") != msg_view.npos)
+		{
+			floor = 6;
+		}
+		if (msg_view.find("7楼") != msg_view.npos || msg_view.find("七楼") != msg_view.npos)
+		{
+			floor = 7;
+		}
+		if (msg_view.find("8楼") != msg_view.npos || msg_view.find("八楼") != msg_view.npos)
+		{
+			floor = 8;
+		}
+		if (msg_view.find("9楼") != msg_view.npos || msg_view.find("九楼") != msg_view.npos)
+		{
+			floor = 9;
+		}
+
 
 		auto result = JwApi.GetFreeClassroom(date, free_time, campus_id, building_id);
 
