@@ -115,18 +115,7 @@ void CmdFreeClassroom(Message m)
 		//选择了楼层选项，则进行楼层筛选
 		if (floor != 0)
 		{
-			for (auto iter = result.begin(); iter != result.end();)
-			{
-				//不是需要的楼层,就删除
-				if (iter->Floor == -1 || iter->Floor != floor)
-				{
-					iter = result.erase(iter);
-				}
-				else
-				{
-					++iter;
-				}
-			}
+			std::erase_if(result, [&](const Jw::FreeClassroom& c) { return c.Floor == -1 || c.Floor != floor;  });
 		}
 
 		// 最多显示 100 个教室(20条消息)
