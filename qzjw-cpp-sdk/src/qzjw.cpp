@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <nlohmann/json.hpp>
 #include <CURLWrapper.h>
+#include <regex>
 using namespace Cyan;
 using std::stringstream;
 using std::runtime_error;
