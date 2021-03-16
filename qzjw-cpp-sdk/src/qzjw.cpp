@@ -1,12 +1,12 @@
-#include "qzjw.h"
+﻿#include "qzjw.h"
 #include <sstream>
 #include <stdexcept>
 #include <nlohmann/json.hpp>
 #include <CURLWrapper.h>
 #include <regex>
+#include <iostream>
 using namespace Cyan;
-using std::stringstream;
-using std::runtime_error;
+using namespace std;
 using namespace nlohmann;
 
 namespace cyanray
@@ -193,8 +193,8 @@ namespace cyanray
 	string Jw::GetMajor(const string& uid)
 	{
 		stringstream url;
-		url << api_prefix_ 
-			<<"/app.do?method=getUserInfo&xh="
+		url << api_prefix_
+			<< "/app.do?method=getUserInfo&xh="
 			<< uid;
 		HTTP http;
 		http.AddHeader("token", token_);
@@ -211,12 +211,12 @@ namespace cyanray
 		stringstream url;
 		url << api_prefix_
 			<< "/app.do?method=getKxJscx&time="
-			<< date 
-			<<"&idleTime="
+			<< date
+			<< "&idleTime="
 			<< freetime[(int)(freeTime)]
-			<<"&xqid="
+			<< "&xqid="
 			<< campus_id
-			<<"&jxlid="
+			<< "&jxlid="
 			<< building_id;
 
 		HTTP http;
@@ -245,18 +245,14 @@ namespace cyanray
 
 	int Jw::GetFloor(const string& classroomName)
 	{
-		string classroom = classroomName + " ";
 		int result = -1;
-		regex pattern(R"((A01|20|30|第二教学楼|\[)(\d)(\d\d\D|楼))");
-
+		regex pattern(R"((?:A01|20|30|第二教学楼|\[)(\d)(?:\d\d(\D|$)|楼))", regex::ECMAScript);
 		std::smatch matches;
-
-		if (regex_search(classroom, matches, pattern)) 
+		if (regex_search(classroomName, matches, pattern))
 		{
-			stringstream ss(matches.str(2));
+			stringstream ss(matches.str(1));
 			ss >> result;
 		}
-
 		return result;
 	}
 

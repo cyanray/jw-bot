@@ -244,10 +244,10 @@ inline int GetWeekToday()
 */
 inline int GetWeekOfSemester()
 {
-	const static time_t first_day_this_semester = AppConfig["first_day_this_semester"].get<int64_t>();
+	const static time_t first_day_of_semester = AppConfig["FirstDayOfSemester"].get<int64_t>();
 	time_t now;
 	time(&now);
-	long long diff_sec = (long long)difftime(now, first_day_this_semester);
+	long long diff_sec = (long long)difftime(now, first_day_of_semester);
 	int week = (int)(((diff_sec) / (7 * 24 * 60 * 60)) + 1);
 	if (week > 20) week = 20;
 	return week;

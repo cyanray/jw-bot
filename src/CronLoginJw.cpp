@@ -13,7 +13,7 @@ void CronJobLoginJw(Cyan::MiraiBot& bot)
 		try
 		{
 			LOG(INFO) << "登录教务网中...";
-			JwApi.Login(AppConfig["QzJwAdminUid"], AppConfig["QzJwAdminPwd"]);
+			JwApi.Login(AppConfig["JwUid"], AppConfig["JwPassword"]);
 			LOG(INFO) << "成功登录教务网!";
 		}
 		catch (const exception& ex)

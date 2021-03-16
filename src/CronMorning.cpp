@@ -8,16 +8,16 @@ void CronJobMorning(Cyan::MiraiBot& bot)
 	const static vector<string> good_morning_words =
 	{ "早安~", "起床学习啦!", "起床！起床！", "你尚未起床，赖床指数666，打败了99%的人!" };
 
-	bool morning_enable = AppConfig["GoodMorning_Enabled"].get<bool>();
+	bool morning_enable = AppConfig["GoodMorningEnabled"].get<bool>();
+	int trigger_time = AppConfig["GoodMorningTriggerTime"].get<int>();
 	while (morning_enable)
 	{
 		int hour = GetHour24();
 
-		// 如果到了5点 就给发早安，然后延迟61分钟
-		// 如果没到5点 就延迟1分钟再次检测
+		// 如果到了触发时间 就给发早安，然后延迟61分钟
+		// 如果没到触发时间 就延迟1分钟再次检测
 		int next_sleep_time = 1;
-
-		if (hour == 5)
+		if (hour == trigger_time)
 		{
 			LOG(INFO) << "准备发送每日课表...";
 
