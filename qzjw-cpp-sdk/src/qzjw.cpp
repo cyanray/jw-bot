@@ -249,7 +249,7 @@ namespace cyanray
 		int result = -1;
 		regex pattern(R"((A01|20|30|第二教学楼|\[)(\d)(\d\d\D|楼))");
 
-		smatch matches;
+		std::smatch matches;
 
 		if (regex_search(classroom, matches, pattern)) 
 		{
