@@ -18,40 +18,25 @@ void CmdExamResult(Message m)
 		}
 		string schoolId = UserDb.GetSid(m.Sender);
 
-		auto res = JwApi.GetExamResult(schoolId, GetThisSemester());
-		if (res.empty())
+		auto exam_results = JwApi.GetExamResult(schoolId, GetThisSemester());
+		if (exam_results.empty())
 		{
-			res = JwApi.GetExamResult(schoolId, GetLastSemester());
+			exam_results = JwApi.GetExamResult(schoolId, GetLastSemester());
 		}
-		if (res.empty())
+		if (exam_results.empty())
 		{
 			m.Reply(MessageChain().Plain("没有查到你的成绩，你是否已被退学？"));
 			return;
 		}
 		int count = 0;
 		MessageChain mc_exam_result;
-		double GPA = 0, credit_sum = 0;
-		double GPA_require_only = 0, credit_sum_require_only = 0;
-		for (auto&& exam : res)
+		for (auto&& exam : exam_results)
 		{
-			if (exam.CourseCategory != "校选")
-			{
-				double t = ScoreToGradePoint(exam.Score);
-				GPA_require_only += t * exam.Credit;
-				credit_sum_require_only += exam.Credit;
-			}
-
-			double t = ScoreToGradePoint(exam.Score);
-			GPA += t * exam.Credit;
-			credit_sum += exam.Credit;
-
-
 			mc_exam_result
 				.Plain(exam.Semester).Plain(", ")
 				.Plain(exam.Name).Plain(", 成绩: ")
 				.Plain(exam.Score).Plain(", 学分: ")
 				.Plain(exam.Credit);
-
 			count++;
 			if (count % 3 == 0)
 			{
@@ -69,8 +54,8 @@ void CmdExamResult(Message m)
 			m.Reply(mc_exam_result);
 		}
 
-		GPA = GPA / credit_sum;
-		GPA_require_only = GPA_require_only / credit_sum_require_only;
+		double GPA = 0, GPA_require_only = 0;
+		CalcGPA(exam_results, GPA, GPA_require_only);
 
 		stringstream ss1;
 		ss1 << fixed << setprecision(2) << GPA_require_only;

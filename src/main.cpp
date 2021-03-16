@@ -167,6 +167,8 @@ int main(int argc, char* argv[])
 
 	bot.On<Message>(CmdBinding);
 
+	bot.On<Message>(CmdRefreshCourses);
+
 	bot.On<Message>(CmdTodayCourses);
 
 	bot.On<Message>(CmdTomorrowCourses);
