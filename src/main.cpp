@@ -15,7 +15,7 @@ using namespace Cyan;
 using namespace cyanray;
 using namespace nlohmann;
 
-Jw JwApi("");
+Jw JwApi = Jw("http://jwgl.cqjtu.edu.cn/");
 
 UserDatabase UserDb;
 NewsDatabase NewsDb;
@@ -56,14 +56,13 @@ int main(int argc, char* argv[])
 				{"AuthKey", "InitKeyA01B01"},
 				{"MiraiApiHost", "localhost"},
 				{"MiraiApiPort", 8080},
-				{"QzJwApiPrefix", "http://jwgl.xxxx.edu.cn/"},
-				{"QzJwAdminUid", "631800000000"},
-				{"QzJwAdminPwd", "pwd123456"},
-				{"first_day_this_semester", 1582473600ll},
-				{"GoodMorning_Enabled", true}
+				{"JwUid", "631800000000"},
+				{"JwPassword", "pwd123456"},
+				{"FirstDayOfSemester", 1582473600ll},
+				{"GoodMorningEnabled", true}
 			};
 			config_file.clear();
-			config_file << AppConfig.dump();
+			config_file << AppConfig.dump(2, ' ');
 			LOG(ERROR) << "没有找到配置文件，已生成默认配置文件，请修改后重新运行本程序!";
 			config_file.close();
 			return 1;
@@ -82,11 +81,10 @@ int main(int argc, char* argv[])
 		LOG(INFO) << "配置: " << it.key() << " : " << it.value();
 	}
 
-	JwApi = Jw(AppConfig["QzJwApiPrefix"]);
 	try
 	{
 		LOG(INFO) << "登录教务网中...";
-		JwApi.Login(AppConfig["QzJwAdminUid"], AppConfig["QzJwAdminPwd"]);
+		JwApi.Login(AppConfig["JwUid"], AppConfig["JwPassword"]);
 		LOG(INFO) << "成功登录教务网!";
 	}
 	catch (const exception& ex)
@@ -199,7 +197,7 @@ int main(int argc, char* argv[])
 
 	auto f3 = std::async(std::launch::async, [&]() { CronJobLoginJw(bot); });
 
-	bot.EventLoop([](const char* error_msg) 
+	bot.EventLoop([](const char* error_msg)
 		{
 			LOG(WARNING) << "接受 mirai 事件时出现错误: " << error_msg;
 		});

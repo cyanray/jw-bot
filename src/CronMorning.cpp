@@ -8,7 +8,7 @@ void CronJobMorning(Cyan::MiraiBot& bot)
 	const static vector<string> good_morning_words =
 	{ "早安~", "起床学习啦!", "起床！起床！", "你尚未起床，赖床指数666，打败了99%的人!" };
 
-	bool morning_enable = AppConfig["GoodMorning_Enabled"].get<bool>();
+	bool morning_enable = AppConfig["GoodMorningEnabled"].get<bool>();
 	while (morning_enable)
 	{
 		int hour = GetHour24();
