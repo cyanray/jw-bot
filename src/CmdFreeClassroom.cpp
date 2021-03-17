@@ -142,9 +142,9 @@ void CmdFreeClassroom(Message m)
 		//选择了楼层选项，则进行楼层筛选
 		if (floors.size() != 0)
 		{
-			std::erase_if(result, [&](const Jw::FreeClassroom& c) 
-				{ 
-					return c.Floor == -1 || !floors.contains(c.Floor);  
+			std::erase_if(result, [&](const Jw::FreeClassroom& c)
+				{
+					return c.Floor == -1 || !floors.contains(c.Floor);
 				});
 		}
 
@@ -153,12 +153,12 @@ void CmdFreeClassroom(Message m)
 
 		if (result.empty())
 		{
-			m.Reply(MessageChain().Plain("没有找到 " + date /*+ " " + FreeTimeText[(int)(free_times)] + "空闲的教室"*/));
+			m.Reply(MessageChain().Plain("没有找到 " + date + " 空闲的教室"));
 		}
 		else
 		{
 			m.Reply(MessageChain()
-				.Plain(date + " " + /*FreeTimeText[(int)(free_times)] + */"空闲的教室有" + to_string(len) + "个："));
+				.Plain(date + " " + "空闲的教室有" + to_string(len) + "个："));
 		}
 
 		MessageChain mc;
