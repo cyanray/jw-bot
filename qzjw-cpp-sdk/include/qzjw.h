@@ -76,6 +76,21 @@ namespace cyanray
 			AllDay, AM, PM, Night
 		};
 
+		//天气
+		struct Weather
+		{
+			//位置（双福 南岸）
+			string position;
+			//日期
+			string date;
+			//天气状况
+			string weather;
+			//最小温度
+			string minTem;
+			//最大温度
+			string maxTem;
+		};
+
 		/**
 		 * \brief 初始化教务系统类
 		 * \param api_prefix 教务系统地址前缀
@@ -134,6 +149,20 @@ namespace cyanray
 		* @return 楼层号
 		*/
 		int GetFloor(const string& classroom);
+
+		/**
+		* @brief 获取天气
+		* @return vector<Weather>
+		*/
+		vector<Weather> GetWeather();
+
+		/**
+		* @brief 根据url获取pos位置的天气(7天)
+		* @param url
+		* @param pos 位置(如科学城、南岸)
+		* @return vector<Weather>
+		*/
+		vector<Weather> GetWeatherByUrl(string url, string pos);
 
 	private:
 		string api_prefix_;

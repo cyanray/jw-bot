@@ -5,6 +5,7 @@
 #include <CURLWrapper.h>
 #include <regex>
 #include <iostream>
+#include <..\..\HTMLReader\include\HTMLReader.h>
 using namespace Cyan;
 using namespace std;
 using namespace nlohmann;
@@ -255,5 +256,97 @@ namespace cyanray
 		}
 		return result;
 	}
+
+	vector<Jw::Weather> Jw::GetWeather()
+	{
+		const string SFURL = "http://www.weather.com.cn/weather/101040500.shtml";
+		const string NAURL = "http://www.weather.com.cn/weather/101044000.shtml";
+		//string SF = "????;
+		//string NA = "??";
+		//const static string ss[2] = { "????,"??" };
+		//char SF[] = "????;
+		//char NA[] = "??";
+		//string_view SFF(SF);
+		//string_view NAA(NA);
+		//vector<string> ss;
+		//ss.push_back(SF);
+		//ss.push_back(NA);
+		//char* SF = new char[]{"???\0"};
+		//char* NA = new char[]{"??\0"};
+
+		string ss = "能否三你";
+		cout << ss << endl;
+
+		cout << "科学城．" << endl;
+		string sd = "覆膜撒．";
+		cout << sd << endl;
+		string jd = "就分手";
+		cout << jd << endl;
+
+		// cout << "AA:" << A << " " << A << endl;
+		//cout << "B:" << SF << " " << NA << endl;
+		vector<Weather> allWeather;
+		//vector<Weather> sfWeather = GetWeatherByUrl(SFURL, "??");
+		//vector<Weather> naWeather = GetWeatherByUrl(NAURL, "?????");
+
+		//allWeather.insert(allWeather.end(), sfWeather.begin(), sfWeather.end());
+		//allWeather.insert(allWeather.end(), naWeather.begin(), naWeather.end());
+
+		return allWeather;
+
+	}
+
+	vector<Jw::Weather> Jw::GetWeatherByUrl(string url, string pos)
+	{
+		cout << "The Pos:" << pos << endl;
+		vector<Weather> W;
+		HTTP http;
+		auto resp = http.Get(url);
+		if (!resp.Ready) throw runtime_error("??????");
+		if (resp.StatusCode != 200) throw runtime_error("????200 ???.");
+
+		HTMLDoc hdoc;
+		hdoc.Parse(resp.Content);
+
+		auto res = hdoc.Search(
+			[](const string& tagName, const Attributes& attrs)
+			{
+				return (tagName == "ul" && attrs.Exist("class", "t clearfix"));
+			});
+
+		try {
+			//其实只有一个ul
+			for (auto& ul : res)
+			{
+				auto theLies = ul.SearchByTagName("li");
+
+				for (auto& li : theLies)
+				{
+					Weather wea;
+					wea.position = pos;
+					wea.date = li["h1"].GetInner();
+
+					auto ps = li.SearchByTagName("p");
+					wea.weather = ps[0].GetInner();
+					wea.minTem = ps[1]["i"].GetInner();
+
+					//晚上的时候没有最大温度
+					auto maxTemH = ps[1].SearchByTagName("span");
+					wea.maxTem = (maxTemH.empty() ? "None" : maxTemH[0].GetInner());
+
+					W.push_back(wea);
+
+					cout << wea.position << " " << wea.date << " " << wea.weather << " " << wea.minTem << " " << wea.maxTem << endl;
+				}
+			}
+		}
+		catch (const CantFindAttribute& cfa)
+		{
+			cout << cfa.what() << endl;
+			hdoc.PrintTree(cout, true);
+		}
+		return W;
+	}
+
 
 }
