@@ -30,9 +30,9 @@ void CronJobMorning(Cyan::MiraiBot& bot)
 
 			unordered_map<int64_t, string> qqNames;
 			auto friends =  bot.GetFriendList();
-			for (auto fri : friends)
+			for (auto& fri : friends)
 			{
-				qqNames.emplace(fri.QQ, fri.NickName);
+				qqNames.emplace(fri.QQ.ToInt64(), fri.NickName);
 			}
 
 			LOG(INFO) << "需要给 " << users.size() << "位同学发送课表";
