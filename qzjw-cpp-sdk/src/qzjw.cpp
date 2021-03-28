@@ -302,8 +302,8 @@ namespace cyanray
 		vector<Weather> W;
 		HTTP http;
 		auto resp = http.Get(url);
-		if (!resp.Ready) throw runtime_error("??????");
-		if (resp.StatusCode != 200) throw runtime_error("????200 ???.");
+		if (!resp.Ready) throw runtime_error("请求无响应");
+		if (resp.StatusCode != 200) throw runtime_error("返回非 200 状态码.");
 
 		HTMLDoc hdoc;
 		hdoc.Parse(resp.Content);

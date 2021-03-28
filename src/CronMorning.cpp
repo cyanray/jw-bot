@@ -1,6 +1,9 @@
 #include <iostream>
 #include <mirai.h>
 #include "main.h"
+#include <unordered_map>
+#include <string>
+using std::unordered_map;
 
 void CronJobMorning(Cyan::MiraiBot& bot)
 {
@@ -24,6 +27,14 @@ void CronJobMorning(Cyan::MiraiBot& bot)
 			int week_of_semester = GetWeekOfSemester();			// 获取本学期第几周
 			int week = GetWeekToday();							// 获取今天是星期几
 			vector<QQ_t> users = UserDb.GetMorningSubscribers();
+
+			unordered_map<int64_t, string> qqNames;
+			auto friends =  bot.GetFriendList();
+			for (auto fri : friends)
+			{
+				qqNames.emplace(fri.QQ, fri.NickName);
+			}
+
 			LOG(INFO) << "需要给 " << users.size() << "位同学发送课表";
 			for (auto user : users)
 			{
@@ -42,7 +53,12 @@ void CronJobMorning(Cyan::MiraiBot& bot)
 					}
 					else
 					{
-						mc.Plain("你今天没有课了！好好休息吧！");
+						auto findName = qqNames.find(user.ToInt64());
+						//如果没找到QQ名，发送QQ号
+						string name = (findName == qqNames.end())
+							? std::to_string(user.ToInt64()) : findName->second;
+						mc.Plain("[").Plain(name).Plain("]\n")
+							.Plain("你今天没有课了！好好休息吧！");
 					}
 
 					bot.SendMessage(user, mc);
