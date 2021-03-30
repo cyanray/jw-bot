@@ -161,6 +161,22 @@ int main(int argc, char* argv[])
 			}
 		});
 
+	bot.On<Message>([&](Message m)
+		{
+			if (m.MessageChain.GetPlainTextFirst() == "校车")
+			{
+				try
+				{
+					auto img = bot.UploadFriendImage("school_bus_timetable.png");
+					m.Reply(MessageChain().Image(img));
+				}
+				catch (const exception& ex)
+				{
+					LOG(ERROR) << "发送校车时刻表时出错: " << ex.what();
+				}
+			}
+		});
+
 	bot.On<Message>(CmdSubscribeNews);
 
 	bot.On<Message>(CmdSubscribeMorning);
