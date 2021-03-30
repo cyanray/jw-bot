@@ -166,6 +166,8 @@ extern void CmdFreeClassroom(Cyan::Message m);
 */
 extern void CmdUpdateCourses(Cyan::GroupMessage m);
 
+extern void CmdWeather(Cyan::Message m);
+
 /**
  * @brief 每日课表计划任务
  * @param bot 

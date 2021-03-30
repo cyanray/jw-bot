@@ -5,7 +5,7 @@
 #include <CURLWrapper.h>
 #include <regex>
 #include <iostream>
-#include <..\..\HTMLReader\include\HTMLReader.h>
+#include <../../HTMLReader/include/HTMLReader.h>
 using namespace Cyan;
 using namespace std;
 using namespace nlohmann;
@@ -286,8 +286,8 @@ namespace cyanray
 		// cout << "AA:" << A << " " << A << endl;
 		//cout << "B:" << SF << " " << NA << endl;
 		vector<Weather> allWeather;
-		//vector<Weather> sfWeather = GetWeatherByUrl(SFURL, "??");
-		//vector<Weather> naWeather = GetWeatherByUrl(NAURL, "?????");
+		//vector<Weather> sfWeather = GetWeatherByUrl(SFURL, "科学城");
+		//vector<Weather> naWeather = GetWeatherByUrl(NAURL, "南岸");
 
 		//allWeather.insert(allWeather.end(), sfWeather.begin(), sfWeather.end());
 		//allWeather.insert(allWeather.end(), naWeather.begin(), naWeather.end());
@@ -345,6 +345,54 @@ namespace cyanray
 			cout << cfa.what() << endl;
 			hdoc.PrintTree(cout, true);
 		}
+		return W;
+	}
+
+	vector<Jw::WeaOneDay> Jw::GetWeatherOf24Hours()
+	{
+		vector<WeaOneDay> W;
+		string url = "http://www.weather.com.cn/weather/101130301.shtml";
+		HTTP http;
+		auto resp = http.Get(url);
+		if (!resp.Ready) throw runtime_error("请求无响应");
+		if (resp.StatusCode != 200) throw runtime_error("返回非 200 状态码.");
+		string x = resp.Content;
+		
+		regex pattern(R"(observe24h_data *= *([^;]+);)");
+		std::smatch matches;
+		string theTextJson = "";
+
+		if(regex_search(x, matches, pattern))
+		{
+			theTextJson = matches.str(1);
+		}
+		//cout << theJson << endl;
+
+
+		json weaJson = json::parse(theTextJson);
+		json weaData =  weaJson["od"]["od2"];
+		string day = "明天";
+		int i = 0;//用于判断今天明天
+		for (auto& ele : weaData)
+		{
+			WeaOneDay wOne;
+			wOne.hour = ele["od21"].get<string>();
+			if (day == "明天" && i != 0 && wOne.hour == "23")
+			{
+				day = "今天";
+			}
+			wOne.day = day;
+			wOne.tem = ele["od22"].get<string>();
+			wOne.precipi = ele["od26"].get<string>();
+			W.push_back(wOne);
+			i++;
+		}
+		//cout << "W Size:" << W.size() << endl;
+		//for (auto& ele : W)
+		//{
+		//	cout << ele.day << "  " << ele.hour << "  " << ele.tem << "  " << ele.precipi << endl;
+		//}
+
 		return W;
 	}
 

@@ -91,6 +91,19 @@ namespace cyanray
 			string maxTem;
 		};
 
+		//25小时的天气数据
+		struct WeaOneDay
+		{
+			//哪天（今天、明天）
+			string day;
+			//小时
+			string hour;
+			//温度
+			string tem;
+			//降水量
+			string precipi;
+		};
+
 		/**
 		 * \brief 初始化教务系统类
 		 * \param api_prefix 教务系统地址前缀
@@ -163,6 +176,12 @@ namespace cyanray
 		* @return vector<Weather>
 		*/
 		vector<Weather> GetWeatherByUrl(string url, string pos);
+
+		/**
+		* @brief 获取当前时间开始25小时的天气(暂时只有江津)
+		* @return vector<WeaOneDay>
+		*/
+		vector<WeaOneDay> GetWeatherOf24Hours();
 
 	private:
 		string api_prefix_;

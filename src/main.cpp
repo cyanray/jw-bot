@@ -193,6 +193,8 @@ int main(int argc, char* argv[])
 
 	bot.On<GroupMessage>(CmdUpdateCourses);
 
+	bot.On<Message>(CmdWeather);
+
 
 	auto f1 = std::async(std::launch::async, [&]() { CronJobMorning(bot); });
 
