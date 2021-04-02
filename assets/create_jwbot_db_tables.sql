@@ -18,7 +18,7 @@ create table user_info
             primary key,
     sid                text,
     news_subscriber    integer default 0,
-    morning_subscriber integer default 1
+    morning_subscriber integer default 0
 );
 
 create table courses

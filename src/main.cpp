@@ -118,13 +118,14 @@ int main(int argc, char* argv[])
 		{
 			try
 			{
+				LOG(INFO) << "新好友申请事件: " << e.Nick << "(" << e.FromId << "): “" << e.Message << "” " << endl;
 				e.Accept();
 				MiraiBot::SleepSeconds(10);
 				bot.SendMessage(e.FromId, MessageChain().Plain(HELP_MSG));
 			}
 			catch (const exception& ex)
 			{
-				cout << ex.what() << endl;	// TODO: log
+				LOG(ERROR) << "处理新好友事件时出错: " << ex.what();
 			}
 		});
 
@@ -132,11 +133,14 @@ int main(int argc, char* argv[])
 		{
 			try
 			{
+				LOG(INFO) << "邀请机器人入群事件: " 
+						  << e.Nick << "(" << e.FromId << "), " 
+						  << e.GroupName << "(" << e.GroupId << ")." << endl;
 				e.Accept();
 			}
 			catch (const exception& ex)
 			{
-				cout << ex.what() << endl;	// TODO: log
+				LOG(ERROR) << "处理邀请机器人入群事件时出错: " << ex.what();
 			}
 		});
 
@@ -154,6 +158,22 @@ int main(int argc, char* argv[])
 			{
 				int week = GetWeekOfSemester();
 				m.Reply(MessageChain().Plain("本周是第 ").Plain(week).Plain(" 周"));
+			}
+		});
+
+	bot.On<Message>([&](Message m)
+		{
+			if (m.MessageChain.GetPlainTextFirst() == "校车")
+			{
+				try
+				{
+					auto img = bot.UploadFriendImage("school_bus_timetable.png");
+					m.Reply(MessageChain().Image(img));
+				}
+				catch (const exception& ex)
+				{
+					LOG(ERROR) << "发送校车时刻表时出错: " << ex.what();
+				}
 			}
 		});
 
