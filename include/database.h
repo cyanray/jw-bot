@@ -10,7 +10,7 @@ using std::string;
 using std::vector;
 using namespace nlohmann;
 
-const static string DB_FILE_NAME = "jwbot.db";
+const static string DB_FILE_NAME = "E:\\C++\\JW-robot\\jw-bot\\assets\\jwbot.db";
 
 namespace Cyan
 {

@@ -3,6 +3,7 @@
 #include "main.h"
 #include "../qzjw-cpp-sdk/CURLWrapper/include/CURLWrapper.h"
 #include <glog/logging.h>
+#include<regex>
 
 void CronJobNews(Cyan::MiraiBot& bot)
 {
@@ -26,10 +27,17 @@ void CronJobNews(Cyan::MiraiBot& bot)
 					["div"]["div"][1]
 					["div"]["div"]["div"]["div"][0]["ul"];
 				auto tables = list.SearchByTagName("dt");
+				regex pattern(R"((?:\.\.)?(.+))", regex::ECMAScript);
 				for (auto& t : tables)
 				{
 					HTMLDoc a = t["a"];
-					string url = "http://jw.cqjtu.edu.cn" + a.GetAttribute("href");
+					string tmp = a.GetAttribute("href");
+					std::smatch matches;
+					if (regex_search(tmp, matches, pattern))
+					{
+						tmp = matches.str(1);	
+					}
+					string url = "http://jw.cqjtu.edu.cn" + tmp;
 					string title = a["span"][0].GetInner();
 					string date = a["span"][1].GetInner();
 					LOG(INFO) << "查询到新闻：" << date << " 《" << title << "》";
