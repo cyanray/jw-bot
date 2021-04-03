@@ -166,7 +166,17 @@ extern void CmdFreeClassroom(Cyan::Message m);
 */
 extern void CmdUpdateCourses(Cyan::GroupMessage m);
 
+/**
+ * @brief 一周天气指令(从当天开始的七天)
+ * @param m
+*/
 extern void CmdWeather(Cyan::Message m);
+
+/**
+ * @brief 今日天气指令
+ * @param m
+*/
+extern void CmdWeatherOneDay(Cyan::Message m);
 
 /**
  * @brief 每日课表计划任务

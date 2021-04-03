@@ -94,6 +94,8 @@ namespace cyanray
 		//25小时的天气数据
 		struct WeaOneDay
 		{
+			//地点（科学城、南岸）
+			string pos;
 			//哪天（今天、明天）
 			string day;
 			//小时
@@ -172,16 +174,24 @@ namespace cyanray
 		/**
 		* @brief 根据url获取pos位置的天气(7天)
 		* @param url
-		* @param pos 位置(如科学城、南岸)
+		* @param pos 位置(如"SF"、"NA")
 		* @return vector<Weather>
 		*/
 		vector<Weather> GetWeatherByUrl(string url, string pos);
 
 		/**
-		* @brief 获取当前时间开始25小时的天气(暂时只有江津)
+		* @brief 获取一天的天气
 		* @return vector<WeaOneDay>
 		*/
-		vector<WeaOneDay> GetWeatherOf24Hours();
+		vector<WeaOneDay> GetWeaOneDay();
+
+		/**
+		* @brief 根据获取当前时间开始25小时的天气
+		* @param url
+		* @param pos 位置(如"SF"、"NA")
+		* @return vector<WeaOneDay>
+		*/
+		vector<WeaOneDay> GetWeaOneDayByUrl(string url,string pos);
 
 	private:
 		string api_prefix_;
