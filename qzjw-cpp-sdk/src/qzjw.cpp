@@ -48,7 +48,7 @@ namespace cyanray
 		HTTP http;
 		http.AddHeader("token", token_);
 		auto resp = http.Get(url.str());
-		if (!resp.Ready) throw runtime_error("请求无响应");
+		if (!resp.Ready) throw runtime_error("请求无响应.");
 		if (resp.StatusCode != 200) throw runtime_error("返回非 200 状态码.");
 		json re_json = json::parse(resp.Content);
 		vector<Course> res;
@@ -136,7 +136,7 @@ namespace cyanray
 		HTTP http;
 		http.AddHeader("token", token_);
 		auto resp = http.Get(url.str());
-		if (!resp.Ready) throw runtime_error("请求无响应");
+		if (!resp.Ready) throw runtime_error("请求无响应.");
 		if (resp.StatusCode != 200) throw runtime_error("返回非 200 状态码.");
 		json re_json = json::parse(resp.Content);
 		vector<ExamResult> res;
@@ -172,7 +172,7 @@ namespace cyanray
 		HTTP http;
 		http.AddHeader("token", token_);
 		auto resp = http.Get(url.str());
-		if (!resp.Ready) throw runtime_error("请求无响应");
+		if (!resp.Ready) throw runtime_error("请求无响应.");
 		if (resp.StatusCode != 200) throw runtime_error("返回非 200 状态码.");
 		json re_json = json::parse(resp.Content);
 		vector<ExamSchedule> res;
@@ -200,7 +200,7 @@ namespace cyanray
 		HTTP http;
 		http.AddHeader("token", token_);
 		auto resp = http.Get(url.str());
-		if (!resp.Ready) throw runtime_error("请求无响应");
+		if (!resp.Ready) throw runtime_error("请求无响应.");
 		if (resp.StatusCode != 200) throw runtime_error("返回非 200 状态码.");
 		json re_json = json::parse(resp.Content);
 		return re_json["zymc"];
@@ -223,7 +223,7 @@ namespace cyanray
 		HTTP http;
 		http.AddHeader("token", token_);
 		auto resp = http.Get(url.str());
-		if (!resp.Ready) throw runtime_error("请求无响应");
+		if (!resp.Ready) throw runtime_error("请求无响应.");
 		if (resp.StatusCode != 200) throw runtime_error("返回非 200 状态码.");
 		json re_json = json::parse(resp.Content);
 		vector<FreeClassroom> res;
