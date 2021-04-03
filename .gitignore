@@ -1,6 +1,7 @@
 .vs/
 out/
-.vscode/
+.vscode
+.gitignore
 assets/
 CMakeSettings.json
 Folder.DotSettings.user
