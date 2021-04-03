@@ -84,7 +84,7 @@ void CronJobMorning(Cyan::MiraiBot& bot)
 				{
 					LOG(INFO) << "给 [" << user.ToInt64() << "] 同学发送早安课表时出现异常: " << ex.what();
 				}
-				std::this_thread::sleep_for(std::chrono::seconds(3));
+				std::this_thread::sleep_for(std::chrono::seconds(6));
 			}
 			next_sleep_time = 61;
 		}
