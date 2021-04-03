@@ -30,15 +30,15 @@ void CmdWeatherOneDay(Message m)
 	}
 	catch (const std::exception& ex)
 	{
-		//LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用 [今日天气] 指令出现异常: " << ex.what();
-		//try
-		//{
-		//	m.Reply(MessageChain().Plain("出现错误："s + ex.what()));
-		//}
-		//catch (const exception& ex)
-		//{
-		//	LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用 [今日天气] 指令出现异常" << ex.what();
-		//}
+		LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用 [今日天气] 指令出现异常: " << ex.what();
+		try
+		{
+			m.Reply(MessageChain().Plain("出现错误："s + ex.what()));
+		}
+		catch (const exception& ex)
+		{
+			LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用 [今日天气] 指令出现异常" << ex.what();
+		}
 	}
 
 }
