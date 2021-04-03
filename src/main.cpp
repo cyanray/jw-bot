@@ -213,6 +213,10 @@ int main(int argc, char* argv[])
 
 	bot.On<GroupMessage>(CmdUpdateCourses);
 
+	bot.On<Message>(CmdWeatherOneWeek);
+
+	bot.On<Message>(CmdWeatherOneDay);
+
 
 	auto f1 = std::async(std::launch::async, [&]() { CronJobMorning(bot); });
 

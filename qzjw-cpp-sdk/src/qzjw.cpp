@@ -5,6 +5,7 @@
 #include <CURLWrapper.h>
 #include <regex>
 #include <iostream>
+#include <../../HTMLReader/include/HTMLReader.h>
 using namespace Cyan;
 using namespace std;
 using namespace nlohmann;
@@ -253,6 +254,136 @@ namespace cyanray
 			stringstream ss(matches.str(1));
 			ss >> result;
 		}
+		return result;
+	}
+
+	vector<Jw::Weather> Jw::GetWeatherOneWeek()
+	{
+		const string SFURL = "http://www.weather.com.cn/weather/101040500.shtml";
+		const string NAURL = "http://www.weather.com.cn/weather/101044000.shtml";
+
+		vector<Weather> allWeather;
+
+		vector<Weather> sfWeather = GetWeatherOneWeekByUrl(SFURL, "SF");
+		vector<Weather> naWeather = GetWeatherOneWeekByUrl(NAURL, "NA");
+
+		allWeather.insert(allWeather.end(), sfWeather.begin(), sfWeather.end());
+		allWeather.insert(allWeather.end(), naWeather.begin(), naWeather.end());
+
+		return allWeather;
+
+	}
+
+	vector<Jw::Weather> Jw::GetWeatherOneWeekByUrl(const string& url, const string& pos)
+	{
+		vector<Weather> result;
+		HTTP http;
+		auto resp = http.Get(url);
+		if (!resp.Ready) throw runtime_error("请求无响应");
+		if (resp.StatusCode != 200) throw runtime_error("返回非 200 状态码.");
+
+		HTMLDoc hdoc;
+		hdoc.Parse(resp.Content);
+
+		auto res = hdoc.Search(
+			[](const string& tagName, const Attributes& attrs)
+			{
+				return (tagName == "ul" && attrs.Exist("class", "t clearfix"));
+			});
+
+		try {
+
+			//只有一个ul
+			for (auto& ul : res)
+			{
+				auto theLies = ul.SearchByTagName("li");
+
+				for (auto& li : theLies)
+				{
+					Weather wea;
+					wea.Position = pos;
+					wea.Date = li["h1"].GetInner();
+
+					auto ps = li.SearchByTagName("p");
+					wea.WeatherCondition = ps[0].GetInner();
+					wea.MinTemperature = ps[1]["i"].GetInner();
+
+					//晚上时当前无最大温度
+					auto maxTemH = ps[1].SearchByTagName("span");
+					wea.MaxTemperature = (maxTemH.empty() ? "None" : maxTemH[0].GetInner());
+
+					result.push_back(wea);
+				}
+			}
+
+		}
+		catch (const CantFindAttribute& cfa)
+		{
+			cout << cfa.what() << endl;
+			hdoc.PrintTree(cout, true);
+		}
+
+		return result;
+
+	}
+
+	vector<Jw::WeatherOneDay> Jw::GetWeatherOneDay()
+	{
+		const string SFURL = "http://www.weather.com.cn/weather/101040500.shtml";
+		const string NAURL = "http://www.weather.com.cn/weather/101044000.shtml";
+
+		vector<WeatherOneDay> allWeatherOneDay;
+
+		vector<WeatherOneDay> sfWeather = GetWeatherOneDayByUrl(SFURL, "SF");
+		vector<WeatherOneDay> naWeather = GetWeatherOneDayByUrl(NAURL, "NA");
+
+		allWeatherOneDay.insert(allWeatherOneDay.end(), sfWeather.begin(), sfWeather.end());
+		allWeatherOneDay.insert(allWeatherOneDay.end(), naWeather.begin(), naWeather.end());
+
+		return allWeatherOneDay;
+	}
+
+	vector<Jw::WeatherOneDay> Jw::GetWeatherOneDayByUrl(const string& url, const string& pos)
+	{
+		vector<WeatherOneDay> result;
+		HTTP http;
+		auto resp = http.Get(url);
+		if (!resp.Ready) throw runtime_error("请求无响应");
+		if (resp.StatusCode != 200) throw runtime_error("返回非 200 状态码.");
+
+		string x = resp.Content;
+
+		regex pattern(R"(observe24h_data *= *([^;]+);)");
+		std::smatch matches;
+		string theJsonText = "";
+
+		if (regex_search(x, matches, pattern))
+		{
+			theJsonText = matches.str(1);
+		}
+
+		json weaJson = json::parse(theJsonText);
+		json weaData = weaJson["od"]["od2"];
+		string day = "tom";
+		int i = 0; //判断今明天
+		for (auto& ele : weaData)
+		{
+			WeatherOneDay wOne;
+			wOne.Position = pos;
+			wOne.Hour = ele["od21"].get<string>();
+			if (day == "tom" && i != 0 && wOne.Hour == "23")
+			{
+				day = "today";
+			}
+
+			wOne.Day = day;
+			wOne.Temperature = ele["od22"].get<string>();
+			wOne.Precipitation = ele["od26"].get<string>();
+			result.push_back(wOne);
+			i++;
+		}
+
+
 		return result;
 	}
 
