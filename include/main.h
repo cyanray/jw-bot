@@ -170,7 +170,7 @@ extern void CmdUpdateCourses(Cyan::GroupMessage m);
  * @brief 一周天气指令(从当天开始的七天)
  * @param m
 */
-extern void CmdWeather(Cyan::Message m);
+extern void CmdWeatherOneWeek(Cyan::Message m);
 
 /**
  * @brief 今日天气指令

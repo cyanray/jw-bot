@@ -183,7 +183,7 @@ namespace cyanray
 		* @brief 获取一天的天气
 		* @return vector<WeaOneDay>
 		*/
-		vector<WeatherOneDay> GetWeaOneDay();
+		vector<WeatherOneDay> GetWeatherOneDay();
 
 		/**
 		* @brief 根据获取当前时间开始25小时的天气
@@ -191,7 +191,7 @@ namespace cyanray
 		* @param pos 位置(如"SF"、"NA")
 		* @return vector<WeaOneDay>
 		*/
-		vector<WeatherOneDay> GetWeaOneDayByUrl(const string& url, const string& pos);
+		vector<WeatherOneDay> GetWeatherOneDayByUrl(const string& url, const string& pos);
 
 	private:
 		string api_prefix_;

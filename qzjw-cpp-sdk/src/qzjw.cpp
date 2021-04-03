@@ -264,19 +264,19 @@ namespace cyanray
 
 		vector<Weather> allWeather;
 
-		vector<Weather> sfWea = GetWeatherByUrl(SFURL, "SF");
-		vector<Weather> naWea = GetWeatherByUrl(SFURL, "NA");
+		vector<Weather> sfWeather = GetWeatherByUrl(SFURL, "SF");
+		vector<Weather> naWeather = GetWeatherByUrl(SFURL, "NA");
 
-		allWeather.insert(allWeather.end(), sfWea.begin(), sfWea.end());
-		allWeather.insert(allWeather.end(), naWea.begin(), naWea.end());
+		allWeather.insert(allWeather.end(), sfWeather.begin(), sfWeather.end());
+		allWeather.insert(allWeather.end(), naWeather.begin(), naWeather.end());
 
 		return allWeather;
 
 	}
 
-	vector<Jw::Weather> Jw::GetWeatherByUrl(string url, string pos)
+	vector<Jw::Weather> Jw::GetWeatherByUrl(const string& url, const string& pos)
 	{
-		vector<Weather> W;
+		vector<Weather> result;
 		HTTP http;
 		auto resp = http.Get(url);
 		if (!resp.Ready) throw runtime_error("请求无响应");
@@ -301,18 +301,18 @@ namespace cyanray
 				for (auto& li : theLies)
 				{
 					Weather wea;
-					wea.position = pos;
-					wea.date = li["h1"].GetInner();
-					
+					wea.Position = pos;
+					wea.Date = li["h1"].GetInner();
+
 					auto ps = li.SearchByTagName("p");
-					wea.weather = ps[0].GetInner();
-					wea.minTem = ps[1]["i"].GetInner();
+					wea.Weather = ps[0].GetInner();
+					wea.MinTemperature = ps[1]["i"].GetInner();
 
 					//晚上时当前无最大温度
 					auto maxTemH = ps[1].SearchByTagName("span");
-					wea.maxTem = (maxTemH.empty() ? "None" : maxTemH[0].GetInner());
+					wea.MaxTemperature = (maxTemH.empty() ? "None" : maxTemH[0].GetInner());
 
-					W.push_back(wea);
+					result.push_back(wea);
 				}
 			}
 
@@ -323,30 +323,29 @@ namespace cyanray
 			hdoc.PrintTree(cout, true);
 		}
 
-		return W;
+		return result;
 
 	}
 
-	vector<Jw::WeaOneDay> Jw::GetWeaOneDay()
+	vector<Jw::WeatherOneDay> Jw::GetWeatherOneDay()
 	{
 		const string SFURL = "http://www.weather.com.cn/weather/101040500.shtml";
 		const string NAURL = "http://www.weather.com.cn/weather/101044000.shtml";
 
-		vector<WeaOneDay> allWeaOneDay;
+		vector<WeatherOneDay> allWeatherOneDay;
 
-		vector<WeaOneDay> sfWea = GetWeaOneDayByUrl(SFURL, "SF");
-		vector<WeaOneDay> naWea = GetWeaOneDayByUrl(SFURL, "NA");
+		vector<WeatherOneDay> sfWeather = GetWeatherOneDayByUrl(SFURL, "SF");
+		vector<WeatherOneDay> naWeather = GetWeatherOneDayByUrl(SFURL, "NA");
 
-		allWeaOneDay.insert(allWeaOneDay.end(), sfWea.begin(), sfWea.end());
-		allWeaOneDay.insert(allWeaOneDay.end(), naWea.begin(), naWea.end());
+		allWeatherOneDay.insert(allWeatherOneDay.end(), sfWeather.begin(), sfWeather.end());
+		allWeatherOneDay.insert(allWeatherOneDay.end(), naWeather.begin(), naWeather.end());
 
-		return allWeaOneDay;
+		return allWeatherOneDay;
 	}
 
-	vector<Jw::WeaOneDay> Jw::GetWeaOneDayByUrl(string url,string pos)
+	vector<Jw::WeatherOneDay> Jw::GetWeatherOneDayByUrl(const string& url, const string& pos)
 	{
-		vector<WeaOneDay> W;
-		//string url = "http://www.weather.com.cn/weather/101130301.shtml";
+		vector<WeatherOneDay> result;
 		HTTP http;
 		auto resp = http.Get(url);
 		if (!resp.Ready) throw runtime_error("请求无响应");
@@ -369,23 +368,23 @@ namespace cyanray
 		int i = 0; //判断今明天
 		for (auto& ele : weaData)
 		{
-			WeaOneDay wOne;
-			wOne.pos = pos;
-			wOne.hour = ele["od21"].get<string>();
-			if (day == "tom" && i != 0 && wOne.hour == "23")
+			WeatherOneDay wOne;
+			wOne.Position = pos;
+			wOne.Hour = ele["od21"].get<string>();
+			if (day == "tom" && i != 0 && wOne.Hour == "23")
 			{
 				day = "today";
 			}
 
-			wOne.day = day;
-			wOne.tem = ele["od22"].get<string>();
-			wOne.precipi = ele["od26"].get<string>();
-			W.push_back(wOne);
+			wOne.Day = day;
+			wOne.Temperature = ele["od22"].get<string>();
+			wOne.Precipitation = ele["od26"].get<string>();
+			result.push_back(wOne);
 			i++;
 		}
 
 
-		return W;
+		return result;
 	}
 
 }

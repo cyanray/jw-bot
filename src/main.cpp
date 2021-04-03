@@ -213,7 +213,7 @@ int main(int argc, char* argv[])
 
 	bot.On<GroupMessage>(CmdUpdateCourses);
 
-	bot.On<Message>(CmdWeather);
+	bot.On<Message>(CmdWeatherOneWeek);
 
 	bot.On<Message>(CmdWeatherOneDay);
 
