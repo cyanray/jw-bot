@@ -169,7 +169,7 @@ namespace cyanray
 		* @brief 获取天气
 		* @return vector<Weather>
 		*/
-		vector<Weather> GetWeather();
+		vector<Weather> GetWeatherOneWeek();
 
 		/**
 		* @brief 根据url获取pos位置的天气(7天)
@@ -177,7 +177,7 @@ namespace cyanray
 		* @param pos 位置(如"SF"、"NA")
 		* @return vector<Weather>
 		*/
-		vector<Weather> GetWeatherByUrl(const string& url, const string& pos);
+		vector<Weather> GetWeatherOneWeekByUrl(const string& url, const string& pos);
 
 		/**
 		* @brief 获取一天的天气

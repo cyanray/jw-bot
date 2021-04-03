@@ -257,15 +257,15 @@ namespace cyanray
 		return result;
 	}
 
-	vector<Jw::Weather> Jw::GetWeather()
+	vector<Jw::Weather> Jw::GetWeatherOneWeek()
 	{
 		const string SFURL = "http://www.weather.com.cn/weather/101040500.shtml";
 		const string NAURL = "http://www.weather.com.cn/weather/101044000.shtml";
 
 		vector<Weather> allWeather;
 
-		vector<Weather> sfWeather = GetWeatherByUrl(SFURL, "SF");
-		vector<Weather> naWeather = GetWeatherByUrl(SFURL, "NA");
+		vector<Weather> sfWeather = GetWeatherOneWeekByUrl(SFURL, "SF");
+		vector<Weather> naWeather = GetWeatherOneWeekByUrl(SFURL, "NA");
 
 		allWeather.insert(allWeather.end(), sfWeather.begin(), sfWeather.end());
 		allWeather.insert(allWeather.end(), naWeather.begin(), naWeather.end());
@@ -274,7 +274,7 @@ namespace cyanray
 
 	}
 
-	vector<Jw::Weather> Jw::GetWeatherByUrl(const string& url, const string& pos)
+	vector<Jw::Weather> Jw::GetWeatherOneWeekByUrl(const string& url, const string& pos)
 	{
 		vector<Weather> result;
 		HTTP http;
