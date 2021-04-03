@@ -13,14 +13,14 @@ void CmdWeatherOneWeek(Message m)
 	try
 	{
 		MessageChain mc;
-		auto weathers = JwApi.GetWeather();
+		auto weathers = JwApi.GetWeatherOneWeek();
 		//cout << "wea size:" << weathers.size() << endl;
 		for (size_t i = 0; i < weathers.size(); i++)
 		{
-			string pos = (weathers[i].Position == "SF") ? "科学城" : "南岸";
-			mc.Plain("地点：").Plain(pos).Plain("\n");
+			string position = (weathers[i].Position == "SF") ? "科学城" : "南岸";
+			mc.Plain("地点：").Plain(position).Plain("\n");
 			mc.Plain("日期：").Plain(weathers[i].Date).Plain("\n");
-			mc.Plain("天气：").Plain(weathers[i].Weather).Plain("\n");
+			mc.Plain("天气：").Plain(weathers[i].WeatherCondition).Plain("\n");
 			if (weathers[i].MaxTemperature == "None")
 			{
 				mc.Plain("最小温度：").Plain(weathers[i].MinTemperature);

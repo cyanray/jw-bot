@@ -17,9 +17,9 @@ void CmdWeatherOneDay(Message m)
 		auto weatherOneDays = JwApi.GetWeatherOneDay();
 		for (int i = weatherOneDays.size() - 1; i >= 0; i--)
 		{
-			std::string pos = (weatherOneDays[i].Position == "SF") ? "科学城" : "南岸";
+			std::string position = (weatherOneDays[i].Position == "SF") ? "科学城" : "南岸";
 			std::string day = (weatherOneDays[i].Day == "today") ? "今天" : "明天";
-			mc.Plain("地点:").Plain(pos).Plain("\n");
+			mc.Plain("地点:").Plain(position).Plain("\n");
 			mc.Plain(day).Plain(" ").Plain(weatherOneDays[i].Hour).Plain("点\n");
 			mc.Plain("温度:").Plain(weatherOneDays[i].Temperature).Plain("℃\n");
 			mc.Plain("降水量:").Plain(weatherOneDays[i].Precipitation).Plain("mm");

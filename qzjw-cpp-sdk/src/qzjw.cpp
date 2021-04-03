@@ -265,7 +265,7 @@ namespace cyanray
 		vector<Weather> allWeather;
 
 		vector<Weather> sfWeather = GetWeatherOneWeekByUrl(SFURL, "SF");
-		vector<Weather> naWeather = GetWeatherOneWeekByUrl(SFURL, "NA");
+		vector<Weather> naWeather = GetWeatherOneWeekByUrl(NAURL, "NA");
 
 		allWeather.insert(allWeather.end(), sfWeather.begin(), sfWeather.end());
 		allWeather.insert(allWeather.end(), naWeather.begin(), naWeather.end());
@@ -305,7 +305,7 @@ namespace cyanray
 					wea.Date = li["h1"].GetInner();
 
 					auto ps = li.SearchByTagName("p");
-					wea.Weather = ps[0].GetInner();
+					wea.WeatherCondition = ps[0].GetInner();
 					wea.MinTemperature = ps[1]["i"].GetInner();
 
 					//晚上时当前无最大温度
@@ -335,7 +335,7 @@ namespace cyanray
 		vector<WeatherOneDay> allWeatherOneDay;
 
 		vector<WeatherOneDay> sfWeather = GetWeatherOneDayByUrl(SFURL, "SF");
-		vector<WeatherOneDay> naWeather = GetWeatherOneDayByUrl(SFURL, "NA");
+		vector<WeatherOneDay> naWeather = GetWeatherOneDayByUrl(NAURL, "NA");
 
 		allWeatherOneDay.insert(allWeatherOneDay.end(), sfWeather.begin(), sfWeather.end());
 		allWeatherOneDay.insert(allWeatherOneDay.end(), naWeather.begin(), naWeather.end());

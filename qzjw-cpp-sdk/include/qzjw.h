@@ -84,7 +84,7 @@ namespace cyanray
 			//日期
 			string Date;
 			//天气状况
-			string Weather;
+			string WeatherCondition;
 			//最小温度
 			string MinTemperature;
 			//最大温度
