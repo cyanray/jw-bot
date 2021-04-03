@@ -80,30 +80,30 @@ namespace cyanray
 		struct Weather
 		{
 			//位置（双福 南岸）
-			string position;
+			string Position;
 			//日期
-			string date;
+			string Date;
 			//天气状况
-			string weather;
+			string Weather;
 			//最小温度
-			string minTem;
+			string MinTemperature;
 			//最大温度
-			string maxTem;
+			string MaxTemperature;
 		};
 
 		//25小时的天气数据
-		struct WeaOneDay
+		struct WeatherOneDay
 		{
 			//地点（科学城、南岸）
-			string pos;
+			string Position;
 			//哪天（今天、明天）
-			string day;
+			string Day;
 			//小时
-			string hour;
+			string Hour;
 			//温度
-			string tem;
+			string Temperature;
 			//降水量
-			string precipi;
+			string Precipitation;
 		};
 
 		/**
@@ -177,13 +177,13 @@ namespace cyanray
 		* @param pos 位置(如"SF"、"NA")
 		* @return vector<Weather>
 		*/
-		vector<Weather> GetWeatherByUrl(string url, string pos);
+		vector<Weather> GetWeatherByUrl(const string& url, const string& pos);
 
 		/**
 		* @brief 获取一天的天气
 		* @return vector<WeaOneDay>
 		*/
-		vector<WeaOneDay> GetWeaOneDay();
+		vector<WeatherOneDay> GetWeaOneDay();
 
 		/**
 		* @brief 根据获取当前时间开始25小时的天气
@@ -191,7 +191,7 @@ namespace cyanray
 		* @param pos 位置(如"SF"、"NA")
 		* @return vector<WeaOneDay>
 		*/
-		vector<WeaOneDay> GetWeaOneDayByUrl(string url,string pos);
+		vector<WeatherOneDay> GetWeaOneDayByUrl(const string& url, const string& pos);
 
 	private:
 		string api_prefix_;
