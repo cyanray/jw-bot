@@ -179,6 +179,12 @@ extern void CmdWeatherOneWeek(Cyan::Message m);
 extern void CmdWeatherOneDay(Cyan::Message m);
 
 /**
+ * @brief 第N周课表指令
+ * @param m 
+*/
+extern void CmdNWeekCourses(Cyan::Message m);
+
+/**
  * @brief 每日课表计划任务
  * @param bot 
 */
