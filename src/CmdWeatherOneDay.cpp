@@ -10,6 +10,9 @@ void CmdWeatherOneDay(Message m)
 
 	LOG(INFO) << "[" << m.Sender.ToInt64() << "] 使用 [今日天气] 指令";
 
+	m.Reply(MessageChain().Plain("本功能暂停使用!"));
+	return;
+
 	try
 	{
 		auto mc = MessageChain();
