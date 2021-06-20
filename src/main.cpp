@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <mirai.h>
 #include <qzjw.h>
+#include <future>
 #include <nlohmann/json.hpp>
 
 #include "main.h"
@@ -51,11 +52,11 @@ int main(int argc, char* argv[])
 		{
 			AppConfig =
 			{
-				{"BotQQ", 100001},
+				{"botQQ", 100001},
+				{"verifyKey", "InitKeyA01B01"},
+				{"hostname", "localhost"},
+				{"port", 8080},
 				{"AdminQQ", 100002},
-				{"AuthKey", "InitKeyA01B01"},
-				{"MiraiApiHost", "localhost"},
-				{"MiraiApiPort", 8080},
 				{"JwUid", "631800000000"},
 				{"JwPassword", "pwd123456"},
 				{"FirstDayOfSemester", 1582473600ll},
@@ -93,13 +94,14 @@ int main(int argc, char* argv[])
 		LOG(ERROR) << "登录教务网出错: " << ex.what();
 	}
 
-	MiraiBot bot(AppConfig["MiraiApiHost"], AppConfig["MiraiApiPort"]);
+	MiraiBot bot;
+	SessionOptions opts = SessionOptions::FromJson(AppConfig);
 	while (true)
 	{
 		try
 		{
 			LOG(INFO) << "尝试连接 mirai...";
-			bot.Auth(AppConfig["AuthKey"], QQ_t(AppConfig["BotQQ"]));
+			bot.Connect(opts);
 			LOG(INFO) << "连接 mirai 成功!";
 			break;
 		}
@@ -225,10 +227,35 @@ int main(int argc, char* argv[])
 
 	auto f3 = std::async(std::launch::async, [&]() { CronJobLoginJw(bot); });
 
-	bot.EventLoop([](const char* error_msg)
+	bot.On<LostConnection>([&](LostConnection e)
 		{
-			LOG(WARNING) << "接受 mirai 事件时出现错误: " << error_msg;
+			LOG(ERROR) << e.ErrorMessage << " (" << e.Code << ")";
+			while (true)
+			{
+				try
+				{
+					LOG(INFO) << "尝试连接 mirai-api-http...";
+					bot.Connect(opts);
+					LOG(INFO) << "与 mirai-api-http 重新建立连接!";
+					break;
+				}
+				catch (const std::exception& ex)
+				{
+					LOG(ERROR) << ex.what();
+				}
+				MiraiBot::SleepSeconds(1);
+			}
 		});
+
+	string cmd;
+	while (cin >> cmd)
+	{
+		if (cmd == "exit")
+		{
+			bot.Disconnect();
+			break;
+		}
+	}
 
 	return 0;
 }

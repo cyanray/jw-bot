@@ -4,6 +4,9 @@
 #include "../qzjw-cpp-sdk/CURLWrapper/include/CURLWrapper.h"
 #include <glog/logging.h>
 #include<regex>
+#ifdef SendMessage
+#undef SendMessage
+#endif
 
 void CronJobNews(Cyan::MiraiBot& bot)
 {

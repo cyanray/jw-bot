@@ -1,5 +1,6 @@
 #include <iostream>
 #include <sstream>
+#include <regex>
 #include "main.h"
 #include <glog/logging.h>
 using namespace std;

@@ -1,6 +1,7 @@
 ﻿#pragma once
 #ifndef jw_bot_main_h_H_
 #define jw_bot_main_h_H_
+#define _CRT_SECURE_NO_WARNINGS
 #include <string>
 #include <sstream>
 #include <mirai.h>
