@@ -24,9 +24,9 @@ R"([重交课表机器人使用帮助]
 6. 回复 "查成绩" 查看最新的成绩
 7. 回复 "查绩点" 查看各学年绩点
 8. 回复 "考试安排" 查看考试安排
-9. 回复 "空教室" 查看空教室✨
+9. 回复 "空教室 [A01|二教|三教] [N楼] [全天|上午|下午|晚上]" 查看空教室
 10. 回复 "刷新课表" 刷新错误的课表(如果发生调课) ✨
-11. 其他指令: "订阅每日课表"、"订阅教务新闻"、"第几周"、"帮助"、"校车"✨、"解除绑定学号")";
+11. 其他指令: "订阅每日课表"、"订阅教务新闻"、"第几周"、"帮助"、"校车"✨、"解除绑定学号"、"彩蛋"✨)";
 
 /**
  * @brief 不知道学号时的友好提示信息
@@ -250,6 +250,21 @@ inline int GetHour24()
 }
 
 /**
+ * @brief 获取当前是多少年
+ * @return yyyy
+*/
+inline int GetYear()
+{
+	char buffer[8];
+	time_t timep;
+	struct tm* p;
+	time(&timep);
+	p = localtime(&timep);
+	strftime(buffer, 8, "%Y", p);
+	return atoi(buffer);
+}
+
+/**
  * @brief 返回今天星期几
  * @return 星期数值，取值范围：1~7
 */
@@ -373,8 +388,9 @@ inline void CalcGPA(const std::vector<cyanray::Jw::ExamResult>& res, double& GPA
 		GPA += t * exam.Credit;
 		credit_sum += exam.Credit;
 	}
-	GPA = GPA / credit_sum;
-	GPA_require_only = GPA_require_only / credit_sum_require_only;
+
+	GPA = credit_sum != 0 ? (GPA / credit_sum) : 0;
+	GPA_require_only = credit_sum_require_only != 0 ? (GPA_require_only / credit_sum_require_only) : 0;
 }
 
 #endif // !jw_bot_main_h_H_
