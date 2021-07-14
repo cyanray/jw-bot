@@ -17,7 +17,7 @@ void CmdBinding(Message m)
 	try
 	{
 		LOG(INFO) << "[" << m.Sender.ToInt64() << "] 使用 [绑定学号] 指令";
-		regex pattern(R"((绑定学号).*?(63\d{10}))");
+		regex pattern(R"((绑定学号).*?(6[3|6]\d{10}))");
 		smatch match;
 		regex_search(msg_str, match, pattern);
 		if (match.size() < 3)
