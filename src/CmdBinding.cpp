@@ -30,9 +30,18 @@ void CmdBinding(Message m)
 		string sid = match[2].str();
 
 		if (!UserDb.Exist(m.Sender))
+		{
 			UserDb.Add(m.Sender, sid);
+		}
 		else
+		{
+			// 以前绑定过学号，那么不自动刷新课表
+			// 可能是绑定别人的学号，查别人的成绩
 			UserDb.UpdateSid(m.Sender, sid);
+			LOG(INFO) << "[" << m.Sender.ToInt64() << "] 更新学号.";
+			m.Reply(MessageChain().Plain("已经更新你的学号!\n请发送“刷新课表”以更新课表数据!"));
+			return;
+		}
 
 		UserDb.ClearCourses(m.Sender);
 
