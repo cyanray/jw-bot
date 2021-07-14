@@ -30,7 +30,7 @@ void CmdScore(Message m)
 		// TODO: 该行代码将会在80年后出错 (2020-07-11)
 		enroll_year += 2000;
 		int this_year = GetYear();
-		for (int i = 0; i < (this_year - enroll_year + 1); i++)
+		while(enroll_year != this_year)
 		{
 			stringstream ss;
 			ss << enroll_year << '-' << enroll_year + 1 << "-1";
