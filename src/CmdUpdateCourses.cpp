@@ -22,18 +22,14 @@ void CmdUpdateCourses(GroupMessage e)
 			string sid = UserDb.GetSid(user);
 			try
 			{
-				json courses_data = json::array();
+				UserDb.ClearCourses(user);
+
 				for (int week_count = 1; week_count <= 20; week_count++)
 				{
-					json courses_week = json::array();
-					for (int i = 0; i < 7; ++i)
-					{
-						courses_week[i] = json::array();
-					}
 					auto courses = JwApi.GetCourses(sid, week_count, GetThisSemester());
 					for (auto&& c : courses)
 					{
-						if (c.StartTime == "08:00")
+						if (c.StartTime == "08:00")	// fu*k jw
 						{
 							c.StartTime = "08:20";
 						}
@@ -41,7 +37,6 @@ void CmdUpdateCourses(GroupMessage e)
 						{
 							c.StartTime = "10:20";
 						}
-
 						if (c.EndTime == "09:40")
 						{
 							c.EndTime = "10:00";
@@ -50,15 +45,10 @@ void CmdUpdateCourses(GroupMessage e)
 						{
 							c.EndTime = "12:00";
 						}
-						json aCourse;
-						aCourse["Name"] = c.Name;
-						aCourse["Classroom"] = c.Classroom;
-						aCourse["Time"] = c.StartTime + "-" + c.EndTime;
-						courses_week[static_cast<int64_t>(c.Week) - 1].push_back(aCourse);
+						UserDb.InsertCourse(user, c.Name, c.Classroom, c.StartTime, c.EndTime, week_count, c.Week);
 					}
-					courses_data.push_back(courses_week);
 				}
-				// TODO: UserDb.UpdateCourses(user, courses_data);
+
 				try
 				{
 					bot.SendMessage(user,
@@ -81,7 +71,7 @@ void CmdUpdateCourses(GroupMessage e)
 	}
 	catch (const std::exception& ex)
 	{
-		cout << ex.what() << endl;	// TODO: log
+		LOG(ERROR) << ex.what();
 	}
 
 }
