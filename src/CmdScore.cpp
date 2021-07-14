@@ -23,21 +23,22 @@ void CmdScore(Message m)
 
 		vector<string> semesters;
 		semesters.reserve(8);
-		int tYear;
+		int enroll_year;
 		stringstream ss;
 		ss << schoolId[2] << schoolId[3];
-		ss >> tYear;
+		ss >> enroll_year;
 		// TODO: 该行代码将会在80年后出错 (2020-07-11)
-		tYear += 2000;
-		for (int i = 0; i < 4; i++)
+		enroll_year += 2000;
+		int this_year = GetYear();
+		for (int i = 0; i < (this_year - enroll_year + 1); i++)
 		{
 			stringstream ss;
-			ss << tYear << '-' << tYear + 1 << "-1";
+			ss << enroll_year << '-' << enroll_year + 1 << "-1";
 			semesters.push_back(ss.str());
 			ss.str("");
-			ss << tYear << '-' << tYear + 1 << "-2";
+			ss << enroll_year << '-' << enroll_year + 1 << "-2";
 			semesters.push_back(ss.str());
-			tYear++;
+			enroll_year++;
 		}
 
 
@@ -53,8 +54,7 @@ void CmdScore(Message m)
 			{
 				if (exam_results_tmp.empty())
 				{
-					m.Reply(MessageChain().Plain("没有查到你的成绩，你是否已被退学？"));
-					return;
+					continue;
 				}
 
 				double GPA = 0, GPA_require_only = 0;
