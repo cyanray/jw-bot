@@ -18,10 +18,7 @@ void CmdFreeClassroom(Message m)
 	{
 		string msg_str = m.MessageChain.GetPlainTextFirst();
 		string_view msg_view(msg_str);
-		if (msg_view.find("空教室") == msg_view.npos)
-		{
-			return;
-		}
+		if (!msg_view.starts_with("空教室")) return;
 
 		LOG(INFO) << "[" << m.Sender.ToInt64() << "] 使用 [查空教室] 指令: " << msg_str;
 
