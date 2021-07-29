@@ -42,7 +42,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE HTMLReader)
 target_compile_definitions(${PROJECT_NAME} PRIVATE MIRAICPP_STATICLIB)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
-    target_link_libraries(${target} pthread)
+    target_link_libraries(${PROJECT_NAME} PRIVATE  pthread)
     target_link_libraries(${PROJECT_NAME} PRIVATE -lstdc++fs)
     target_link_libraries(${PROJECT_NAME} PRIVATE -static-libgcc -static-libstdc++)
 endif()
