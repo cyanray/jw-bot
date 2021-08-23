@@ -300,7 +300,7 @@ inline int GetWeekOfSemester()
 */
 inline string GetThisSemester()
 {
-	return "2020-2021-2";	// TODO: calc by datetime
+	return "2021-2022-1";	// TODO: calc by datetime
 }
 
 /**
@@ -309,7 +309,7 @@ inline string GetThisSemester()
 */
 inline string GetLastSemester()
 {
-	return "2020-2021-1";	// TODO: calc by datetime
+	return "2020-2021-2";	// TODO: calc by datetime
 }
 
 /**

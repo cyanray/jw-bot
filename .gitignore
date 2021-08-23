@@ -2,3 +2,4 @@
 out/
 CMakeSettings.json
 Folder.DotSettings.user
+/CMakePresets.json

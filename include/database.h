@@ -196,6 +196,17 @@ namespace Cyan
 			else return -1;
 		}
 
+		int GetUserCount_21()
+		{
+			vector<QQ_t> res;
+			SQLite::Statement sql(db_, "select COUNT(sid) from user_info where sid like '6321%'");
+			if (sql.executeStep())
+			{
+				return sql.getColumn(0);
+			}
+			else return -1;
+		}
+
 		void UpdateNewsSubscription(QQ_t qq, bool subscription)
 		{
 			SQLite::Statement sql(db_, "UPDATE user_info SET news_subscriber = ? WHERE qq = ?");
