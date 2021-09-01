@@ -6,6 +6,7 @@
 #include <mirai.h>
 #include <qzjw.h>
 #include <future>
+#include <locale>
 #include <nlohmann/json.hpp>
 
 #include "main.h"
@@ -28,6 +29,8 @@ int main(int argc, char* argv[])
 #if defined(_WIN32) || defined(WIN32)
 	system("chcp 65001");
 #endif
+	std::setlocale(LC_ALL, "zh_CN.UTF-8");
+	std::locale::global(std::locale(""));
 
 	google::InitGoogleLogging(argv[0]);
 	FLAGS_logtostderr = 1;

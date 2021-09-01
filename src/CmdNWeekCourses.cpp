@@ -1,7 +1,9 @@
 #include <iostream>
+#include <string>
 #include <sstream>
 #include <regex>
 #include "main.h"
+#include "utils.h"
 #include <glog/logging.h>
 using namespace std;
 using namespace Cyan;
@@ -13,9 +15,11 @@ void CmdNWeekCourses(Message m)
 
 	try
 	{
-		regex pattern(R"(第([1-9]|1[0-9]|20)周课表)");
-		smatch match;
-		regex_search(msg_str, match, pattern);
+		wstring msg_wstr = Cyan::Encoding::UTF8::to_wstring(msg_str);
+		wregex pattern(L"第([1-9]|1[0-9]|20|[\u4e00-\u9fa5]{1,2})周课表");
+		wsmatch match;
+		regex_search(msg_wstr, match, pattern);
+
 		if (match.size() < 2)
 		{
 			return;
@@ -23,12 +27,21 @@ void CmdNWeekCourses(Message m)
 
 		LOG(INFO) << "[" << m.Sender.ToInt64() << "] 使用 [第N周课表] 指令";
 
-		int week_tmp = std::stoi(match[1].str());
+
+		wstring weekNumberStr = match[1].str();
+		int week = 1;
+		if (std::isdigit(weekNumberStr[0]))
+		{
+			week = std::stoi(weekNumberStr);
+		}
+		else
+		{
+			week = Cyan::Utils::ChineseNumberTo<int>(weekNumberStr);
+		}
+
+		if (week < 0 || week > 20) return;
 
 		const static string weekdayStr[7] = { "星期一","星期二","星期三","星期四","星期五","星期六","星期天" };
-
-		// GetWeek()范围为[1,20]
-		int week = week_tmp;
 
 		if (UserDb.GetSid(m.Sender).empty())
 		{
