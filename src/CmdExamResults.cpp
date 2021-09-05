@@ -58,9 +58,9 @@ void CmdExamResult(Message m)
 		CalcGPA(exam_results, GPA, GPA_require_only);
 
 		stringstream ss1;
-		ss1 << fixed << setprecision(2) << GPA_require_only;
+		ss1 << fixed << setprecision(3) << GPA_require_only;
 		stringstream ss2;
-		ss2 << fixed << setprecision(2) << GPA;
+		ss2 << fixed << setprecision(3) << GPA;
 
 		MessageChain mc;
 		mc.Plain("平均学分绩点(排除校选)：").Plain(ss1.str()).Plain("\n");

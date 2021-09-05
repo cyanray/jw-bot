@@ -30,7 +30,8 @@ int main(int argc, char* argv[])
 	system("chcp 65001");
 #endif
 	std::setlocale(LC_ALL, "zh_CN.UTF-8");
-	std::locale::global(std::locale(""));
+	std::setlocale(LC_NUMERIC, "C");
+	std::locale::global(std::locale(std::locale(""), "C", std::locale::numeric));
 
 	google::InitGoogleLogging(argv[0]);
 	FLAGS_logtostderr = 1;
@@ -138,9 +139,9 @@ int main(int argc, char* argv[])
 		{
 			try
 			{
-				LOG(INFO) << "邀请机器人入群事件: " 
-						  << e.Nick << "(" << e.FromId << "), " 
-						  << e.GroupName << "(" << e.GroupId << ")." << endl;
+				LOG(INFO) << "邀请机器人入群事件: "
+					<< e.Nick << "(" << e.FromId << "), "
+					<< e.GroupName << "(" << e.GroupId << ")." << endl;
 				e.Accept();
 			}
 			catch (const exception& ex)

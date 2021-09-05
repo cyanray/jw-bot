@@ -61,9 +61,9 @@ void CmdScore(Message m)
 				CalcGPA(exam_results_tmp, GPA, GPA_require_only);
 
 				stringstream ss1;
-				ss1 << fixed << setprecision(2) << GPA_require_only;
+				ss1 << fixed << setprecision(3) << GPA_require_only;
 				stringstream ss2;
-				ss2 << fixed << setprecision(2) << GPA;
+				ss2 << fixed << setprecision(3) << GPA;
 
 				MessageChain mc;
 				mc.Plain(semesters[i - 1]).Plain(" ~ ").Plain(semesters[i]).Plain("\n")
@@ -79,9 +79,9 @@ void CmdScore(Message m)
 		CalcGPA(exam_results_all, GPA, GPA_require_only);
 
 		stringstream ss1;
-		ss1 << fixed << setprecision(2) << GPA_require_only;
+		ss1 << fixed << setprecision(3) << GPA_require_only;
 		stringstream ss2;
-		ss2 << fixed << setprecision(2) << GPA;
+		ss2 << fixed << setprecision(3) << GPA;
 
 		MessageChain mc;
 		mc.Plain("【所有考试科目】\n")
