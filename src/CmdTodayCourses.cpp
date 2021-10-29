@@ -10,13 +10,13 @@ void CmdTodayCourses(Message m)
 	string txt = m.MessageChain.GetPlainTextFirst();
 	if (txt != "查课表" && txt != "课表" && txt != "今天课表" && txt != "今日课表") return;
 
-	LOG(INFO) << "[" << m.Sender.ToInt64() << "] 使用 [今日课表] 指令: " << txt;
+	LOG(INFO) << "[" << m.Sender << "] 使用 [今日课表] 指令: " << txt;
 
 	try
 	{
 		if (UserDb.GetSid(m.Sender).empty())
 		{
-			LOG(INFO) << "[" << m.Sender.ToInt64() << "] 使用 [今日课表] 指令时出现错误: 没有找到学号!";
+			LOG(INFO) << "[" << m.Sender << "] 使用 [今日课表] 指令时出现错误: 没有找到学号!";
 			m.Reply(MessageChain().Plain(UNKNOWN_SCHOOL_ID_MSG));
 			return;
 		}
@@ -30,7 +30,7 @@ void CmdTodayCourses(Message m)
 		int count = today_courses.size();
 		if (count > 0)
 		{
-			mc.Plain("你今天共有 ").Plain(count).Plain(" 节课\n");
+			mc.Plain(fmt::format("你今天共有 {} 节课\n", count));
 			mc = mc + CoursesFormat(today_courses);
 		}
 		else
@@ -43,14 +43,14 @@ void CmdTodayCourses(Message m)
 	}
 	catch (const std::exception& ex)
 	{
-		LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用 [今日课表] 指令时出现异常: " << ex.what();
+		LOG(ERROR) << "[" << m.Sender << "] 使用 [今日课表] 指令时出现异常: " << ex.what();
 		try
 		{
 			m.Reply(MessageChain().Plain("出现错误："s + ex.what()));
 		}
 		catch (const exception& ex)
 		{
-			LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用 [今日课表] 指令时出现异常: " << ex.what();
+			LOG(ERROR) << "[" << m.Sender << "] 使用 [今日课表] 指令时出现异常: " << ex.what();
 		}
 	}
 }
