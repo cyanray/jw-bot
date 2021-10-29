@@ -6,6 +6,7 @@
 #include <unordered_set>
 #include <glog/logging.h>
 #include <algorithm>
+#include <fmt/core.h>
 #include "main.h"
 using namespace std;
 using namespace Cyan;
@@ -20,7 +21,7 @@ void CmdFreeClassroom(Message m)
 		string_view msg_view(msg_str);
 		if (!msg_view.starts_with("空教室")) return;
 
-		LOG(INFO) << "[" << m.Sender.ToInt64() << "] 使用 [查空教室] 指令: " << msg_str;
+		LOG(INFO) << "[" << m.Sender << "] 使用 [查空教室] 指令: " << msg_str;
 
 		string date = GetCurrentDate();
 		string campus_id = "02";
@@ -154,17 +155,13 @@ void CmdFreeClassroom(Message m)
 		}
 		else
 		{
-			m.Reply(MessageChain()
-				.Plain(date + " " + "空闲的教室有" + to_string(len) + "个："));
+			m.Reply(MessageChain().Plain(fmt::format("{} 空闲的教室有 {} 个: ", date, len)));
 		}
 
 		MessageChain mc;
 		for (size_t i = 0; i < len; i++)
 		{
-			mc
-				.Plain(i + 1).Plain(". ")
-				.Plain(result[i].BuildingName + " ")
-				.Plain(result[i].ClassroomName + " (").Plain(result[i].Capacity).Plain(" 座)");
+			mc.Plain(fmt::format("{}. {} {} ({}座)", i + 1, result[i].BuildingName, result[i].ClassroomName, result[i].Capacity));
 			if ((i + 1) % 5 == 0)
 			{
 				m.Reply(mc);
@@ -184,14 +181,14 @@ void CmdFreeClassroom(Message m)
 	}
 	catch (const std::exception& ex)
 	{
-		LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用 [查空教室] 指令时出现异常: " << ex.what();
+		LOG(ERROR) << "[" << m.Sender << "] 使用 [查空教室] 指令时出现异常: " << ex.what();
 		try
 		{
 			m.Reply(MessageChain().Plain("出现错误："s + ex.what()));
 		}
 		catch (const exception& ex)
 		{
-			LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用 [查空教室] 指令时出现异常: " << ex.what();
+			LOG(ERROR) << "[" << m.Sender << "] 使用 [查空教室] 指令时出现异常: " << ex.what();
 		}
 	}
 
