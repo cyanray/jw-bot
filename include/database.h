@@ -289,6 +289,11 @@ WHERE qq = ? AND week_of_semester = ? AND week = ?;
 			return result;
 		}
 
+		SQLite::Database& GetDatabase()
+		{
+			return db_;
+		}
+
 	private:
 		SQLite::Database db_;
 	};

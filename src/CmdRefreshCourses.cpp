@@ -23,6 +23,7 @@ void CmdRefreshCourses(Message m)
 			return;
 		}
 
+		SQLite::Transaction transaction(UserDb.GetDatabase());
 		UserDb.ClearCourses(m.Sender);
 		for (int week_count = 1; week_count <= 20; week_count++)
 		{
@@ -55,6 +56,7 @@ void CmdRefreshCourses(Message m)
 				UserDb.InsertCourse(m.Sender, c.Name, c.Classroom, c.StartTime, c.EndTime, week_count, c.Week);
 			}
 		}
+		transaction.commit();
 		LOG(INFO) << "[" << m.Sender << "] 刷新课表成功!";
 		m.Reply(MessageChain().Plain("刷新课表成功!"));
 	}
