@@ -8,7 +8,9 @@ using namespace Cyan;
 
 void CmdNextWeekCourses(Message m)
 {
-	if (m.MessageChain.GetPlainTextFirst() != "下周课表") return;
+	string msg_str = m.MessageChain.GetPlainTextFirst();
+	string_view msg_view(msg_str);
+	if (!msg_view.starts_with("下周课表")) return;
 
 	LOG(INFO) << "[" << m.Sender << "] 使用 [下周课表] 指令";
 
@@ -24,10 +26,21 @@ void CmdNextWeekCourses(Message m)
 			return;
 		}
 
+		QQ_t qq = m.Sender;
+		if (msg_view.ends_with("!") || msg_view.ends_with("！"))
+		{
+			qq = UserDb.GetFriendQQ(qq);
+		}
+		if (qq.ToInt64() == -1)
+		{
+			m.Reply(MessageChain().Plain("使用【交个朋友】指令建立好友关系后可以查询对方的课表！"));
+			return;
+		}
+
 		m.Reply(MessageChain().Plain(fmt::format("下周是第 {} 周", week)));
 		for (int w = 1; w <= 7; ++w)
 		{
-			auto courses = UserDb.GetCourses(m.Sender, week, w);
+			auto courses = UserDb.GetCourses(qq, week, w);
 			MessageChain mc;
 			int count = courses.size();
 			if (count > 0)

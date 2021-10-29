@@ -9,7 +9,10 @@ using namespace cyanray;
 
 void CmdExamSchedule(Message m)
 {
-	if (m.MessageChain.GetPlainTextFirst() != "考试安排") return;
+	string msg_str = m.MessageChain.GetPlainTextFirst();
+	string_view msg_view(msg_str);
+	if (!msg_view.starts_with("考试安排")) return;
+
 	LOG(INFO) << "[" << m.Sender << "] 使用 [考试安排] 指令";
 
 	string schoolId = UserDb.GetSid(m.Sender);
@@ -19,6 +22,17 @@ void CmdExamSchedule(Message m)
 		m.Reply(MessageChain().Plain(UNKNOWN_SCHOOL_ID_MSG));
 		return;
 	}
+
+	if (msg_view.ends_with("!") || msg_view.ends_with("！"))
+	{
+		schoolId = UserDb.GetFriendSid(m.Sender);
+	}
+	if (schoolId.empty())
+	{
+		m.Reply(MessageChain().Plain("使用【交个朋友】指令建立好友关系后可以查询对方的成绩！"));
+		return;
+	}
+
 
 	try
 	{

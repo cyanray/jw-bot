@@ -8,7 +8,9 @@ using namespace Cyan;
 
 void CmdExamResult(Message m)
 {
-	if (m.MessageChain.GetPlainTextFirst() != "查成绩") return;
+	string msg_str = m.MessageChain.GetPlainTextFirst();
+	string_view msg_view(msg_str);
+	if (!msg_view.starts_with("查成绩")) return;
 
 	try
 	{
@@ -16,6 +18,16 @@ void CmdExamResult(Message m)
 		if (schoolId.empty())
 		{
 			m.Reply(MessageChain().Plain(UNKNOWN_SCHOOL_ID_MSG));
+			return;
+		}
+
+		if (msg_view.ends_with("!") || msg_view.ends_with("！"))
+		{
+			schoolId = UserDb.GetFriendSid(m.Sender);
+		}
+		if (schoolId.empty())
+		{
+			m.Reply(MessageChain().Plain("使用【交个朋友】指令建立好友关系后可以查询对方的绩点！"));
 			return;
 		}
 

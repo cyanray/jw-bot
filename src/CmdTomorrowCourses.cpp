@@ -7,10 +7,17 @@ using namespace Cyan;
 
 void CmdTomorrowCourses(Message m)
 {
-	string txt = m.MessageChain.GetPlainTextFirst();
-	if (txt != "明天的" && txt != "明天课表" && txt != "明天的课表" && txt != "明日课表") return;
+	string msg_str = m.MessageChain.GetPlainTextFirst();
+	string_view msg_view(msg_str);
+	if (!msg_view.starts_with("明天的") &&
+		!msg_view.starts_with("明天课表") &&
+		!msg_view.starts_with("明天的课表") &&
+		!msg_view.starts_with("明日课表"))
+	{
+		return;
+	}
 
-	LOG(INFO) << "[" << m.Sender << "] 使用 [明日课表] 指令: " << txt;
+	LOG(INFO) << "[" << m.Sender << "] 使用 [明日课表] 指令: " << msg_str;
 
 	try
 	{
@@ -18,6 +25,17 @@ void CmdTomorrowCourses(Message m)
 		{
 			LOG(INFO) << "[" << m.Sender << "] 使用 [明日课表] 指令时出现错误: 没有找到学号!";
 			m.Reply(MessageChain().Plain(UNKNOWN_SCHOOL_ID_MSG));
+			return;
+		}
+
+		QQ_t qq = m.Sender;
+		if (msg_view.ends_with("!") || msg_view.ends_with("！"))
+		{
+			qq = UserDb.GetFriendQQ(qq);
+		}
+		if (qq.ToInt64() == -1)
+		{
+			m.Reply(MessageChain().Plain("使用【交个朋友】指令建立好友关系后可以查询对方的课表！"));
 			return;
 		}
 
@@ -31,7 +49,7 @@ void CmdTomorrowCourses(Message m)
 			week = 1;
 			week_of_semester = ( week_of_semester + 1) % 21;
 		}
-		auto today_courses = UserDb.GetCourses(m.Sender, week_of_semester, week);
+		auto today_courses = UserDb.GetCourses(qq, week_of_semester, week);
 
 		MessageChain mc;
 		int count = today_courses.size();

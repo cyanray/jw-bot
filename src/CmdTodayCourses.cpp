@@ -7,10 +7,16 @@ using namespace Cyan;
 
 void CmdTodayCourses(Message m)
 {
-	string txt = m.MessageChain.GetPlainTextFirst();
-	if (txt != "查课表" && txt != "课表" && txt != "今天课表" && txt != "今日课表") return;
-
-	LOG(INFO) << "[" << m.Sender << "] 使用 [今日课表] 指令: " << txt;
+	string msg_str = m.MessageChain.GetPlainTextFirst();
+	string_view msg_view(msg_str);
+	if (!msg_view.starts_with("查课表") && 
+		!msg_view.starts_with("课表") && 
+		!msg_view.starts_with("今天课表") && 
+		!msg_view.starts_with("今日课表"))
+	{
+		return;
+	}
+	LOG(INFO) << "[" << m.Sender << "] 使用 [今日课表] 指令: " << msg_str;
 
 	try
 	{
@@ -18,6 +24,18 @@ void CmdTodayCourses(Message m)
 		{
 			LOG(INFO) << "[" << m.Sender << "] 使用 [今日课表] 指令时出现错误: 没有找到学号!";
 			m.Reply(MessageChain().Plain(UNKNOWN_SCHOOL_ID_MSG));
+			return;
+		}
+
+		QQ_t qq = m.Sender;
+		if (msg_view.ends_with("!") || msg_view.ends_with("！"))
+		{
+			qq = UserDb.GetFriendQQ(qq);
+		}
+
+		if (qq.ToInt64() == -1)
+		{
+			m.Reply(MessageChain().Plain("使用【交个朋友】指令建立好友关系后可以查询对方的课表！"));
 			return;
 		}
 

@@ -1,4 +1,4 @@
-create table news
+create table if not exists news
 (
     id    integer not null
         constraint news_pk
@@ -8,20 +8,21 @@ create table news
     url   text default 'http://jw.cqjtu.edu.cn/jxxx/tzgg1.htm' not null
 );
 
-create unique index news_id_uindex
+create unique index if not exists news_id_uindex
     on news (id);
 
-create table user_info
+create table if not exists user_info
 (
     qq                 Integer not null
         constraint user_info_pk
             primary key,
     sid                text,
     news_subscriber    integer default 0,
-    morning_subscriber integer default 0
+    morning_subscriber integer default 0,
+    friend_qq          integer
 );
 
-create table courses
+create table if not exists courses
 (
     id               integer not null
         constraint courses_pk
@@ -37,12 +38,12 @@ create table courses
     week             integer not null
 );
 
-create unique index courses_id_uindex
+create unique index if not exists courses_id_uindex
     on courses (id);
 
-create index courses_qq_index
+create index if not exists courses_qq_index
     on courses (qq);
 
-create unique index user_info_qq_uindex
+create unique index if not exists user_info_qq_uindex
     on user_info (qq);
 

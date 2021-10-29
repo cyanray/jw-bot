@@ -187,6 +187,12 @@ extern void CmdWeatherOneDay(Cyan::Message m);
 extern void CmdNWeekCourses(Cyan::Message m);
 
 /**
+ * @brief 建立好友关系指令
+ * @param m 
+*/
+extern void CmdMakeFriend(Cyan::Message m);
+
+/**
  * @brief 每日课表计划任务
  * @param bot 
 */

@@ -7,7 +7,9 @@ using namespace Cyan;
 
 void CmdWeekCourses(Message m)
 {
-	if (m.MessageChain.GetPlainTextFirst() != "本周课表") return;
+	string msg_str = m.MessageChain.GetPlainTextFirst();
+	string_view msg_view(msg_str);
+	if (!msg_view.starts_with("本周课表")) return;
 
 	LOG(INFO) << "[" << m.Sender << "] 使用 [本周课表] 指令";
 
@@ -20,6 +22,17 @@ void CmdWeekCourses(Message m)
 		if (UserDb.GetSid(m.Sender).empty())
 		{
 			m.Reply(MessageChain().Plain(UNKNOWN_SCHOOL_ID_MSG));
+			return;
+		}
+
+		QQ_t qq = m.Sender;
+		if (msg_view.ends_with("!") || msg_view.ends_with("！"))
+		{
+			qq = UserDb.GetFriendQQ(qq);
+		}
+		if (qq.ToInt64() == -1)
+		{
+			m.Reply(MessageChain().Plain("使用【交个朋友】指令建立好友关系后可以查询对方的课表！"));
 			return;
 		}
 

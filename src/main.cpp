@@ -87,6 +87,9 @@ int main(int argc, char* argv[])
 		LOG(INFO) << "配置: " << it.key() << " : " << it.value();
 	}
 
+	LOG(INFO) << "初始化数据库...";
+	CreateDatabase();
+
 	try
 	{
 		LOG(INFO) << "登录教务网中...";
@@ -224,6 +227,8 @@ int main(int argc, char* argv[])
 	bot.On<Message>(CmdWeatherOneDay);
 
 	bot.On<Message>(CmdNWeekCourses);
+
+	bot.On<Message>(CmdMakeFriend);
 
 	auto f1 = std::async(std::launch::async, [&]() { CronJobMorning(bot); });
 

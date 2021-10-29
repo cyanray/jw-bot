@@ -12,6 +12,7 @@ using namespace Cyan;
 void CmdNWeekCourses(Message m)
 {
 	string msg_str = m.MessageChain.GetPlainTextFirst();
+	string_view msg_view(msg_str);
 
 	try
 	{
@@ -49,9 +50,20 @@ void CmdNWeekCourses(Message m)
 			return;
 		}
 
+		QQ_t qq = m.Sender;
+		if (msg_view.ends_with("!") || msg_view.ends_with("！"))
+		{
+			qq = UserDb.GetFriendQQ(qq);
+		}
+		if (qq.ToInt64() == -1)
+		{
+			m.Reply(MessageChain().Plain("使用【交个朋友】指令建立好友关系后可以查询对方的课表！"));
+			return;
+		}
+
 		for (int w = 1; w <= 7; ++w)
 		{
-			auto courses = UserDb.GetCourses(m.Sender, week, w);
+			auto courses = UserDb.GetCourses(qq, week, w);
 			MessageChain mc;
 			int count = courses.size();
 			if (count > 0)
