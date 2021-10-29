@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 #include <regex>
+#include <fmt/core.h>
 #include "main.h"
 #include "utils.h"
 #include <glog/logging.h>
@@ -11,7 +12,6 @@ using namespace Cyan;
 void CmdNWeekCourses(Message m)
 {
 	string msg_str = m.MessageChain.GetPlainTextFirst();
-	string_view msg_view(msg_str);
 
 	try
 	{
@@ -25,7 +25,7 @@ void CmdNWeekCourses(Message m)
 			return;
 		}
 
-		LOG(INFO) << "[" << m.Sender.ToInt64() << "] 使用 [第N周课表] 指令";
+		LOG(INFO) << "[" << m.Sender << "] 使用 [第N周课表] 指令";
 
 
 		wstring weekNumberStr = match[1].str();
@@ -56,12 +56,12 @@ void CmdNWeekCourses(Message m)
 			int count = courses.size();
 			if (count > 0)
 			{
-				mc.Plain("第 ").Plain(week).Plain(" 周 ").Plain(weekdayStr[w - 1]).Plain(" 你共有 ").Plain(count).Plain(" 节课\n");
+				mc.Plain(fmt::format("第 {} 周 {} 你共有 {} 节课\n", week, weekdayStr[w - 1], count));
 				mc = mc + CoursesFormat(courses);
 			}
 			else
 			{
-				mc.Plain("第 ").Plain(week).Plain(" 周 ").Plain(weekdayStr[w - 1]).Plain(" 你没有课");
+				mc.Plain(fmt::format("第 {} 周 {} 你没有课\n", week, weekdayStr[w - 1]));
 			}
 			m.Reply(mc);
 			std::this_thread::sleep_for(std::chrono::milliseconds(200));
@@ -70,14 +70,14 @@ void CmdNWeekCourses(Message m)
 	}
 	catch (const std::exception& ex)
 	{
-		LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用 [第N周课表] 指令时出现异常: " << ex.what();
+		LOG(ERROR) << "[" << m.Sender << "] 使用 [第N周课表] 指令时出现异常: " << ex.what();
 		try
 		{
 			m.Reply(MessageChain().Plain("出现错误："s + ex.what()));
 		}
 		catch (const exception& ex)
 		{
-			LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用 [第N周课表] 指令时出现异常: " << ex.what();
+			LOG(ERROR) << "[" << m.Sender << "] 使用 [第N周课表] 指令时出现异常: " << ex.what();
 		}
 	}
 }

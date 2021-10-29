@@ -9,7 +9,7 @@ void CmdNextWeekCourses(Message m)
 {
 	if (m.MessageChain.GetPlainTextFirst() != "下周课表") return;
 
-	LOG(INFO) << "[" << m.Sender.ToInt64() << "] 使用 [下周课表] 指令";
+	LOG(INFO) << "[" << m.Sender << "] 使用 [下周课表] 指令";
 
 	const static string weekdayStr[7] = { "星期一","星期二","星期三","星期四","星期五","星期六","星期天" };
 	try
@@ -45,14 +45,14 @@ void CmdNextWeekCourses(Message m)
 	}
 	catch (const std::exception& ex)
 	{
-		LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用 [下周课表] 指令时出现异常: " << ex.what();
+		LOG(ERROR) << "[" << m.Sender << "] 使用 [下周课表] 指令时出现异常: " << ex.what();
 		try
 		{
 			m.Reply(MessageChain().Plain("出现错误："s + ex.what()));
 		}
 		catch (const exception& ex)
 		{
-			LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用 [下周课表] 指令时出现异常: " << ex.what();
+			LOG(ERROR) << "[" << m.Sender << "] 使用 [下周课表] 指令时出现异常: " << ex.what();
 		}
 	}
 }
