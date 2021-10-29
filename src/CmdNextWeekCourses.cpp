@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include <glog/logging.h>
+#include <fmt/core.h>
 #include "main.h"
 using namespace std;
 using namespace Cyan;
@@ -23,7 +24,7 @@ void CmdNextWeekCourses(Message m)
 			return;
 		}
 
-		m.Reply(MessageChain().Plain("下周是第 ").Plain(week).Plain(" 周"));
+		m.Reply(MessageChain().Plain(fmt::format("下周是第 {} 周", week)));
 		for (int w = 1; w <= 7; ++w)
 		{
 			auto courses = UserDb.GetCourses(m.Sender, week, w);
@@ -31,12 +32,12 @@ void CmdNextWeekCourses(Message m)
 			int count = courses.size();
 			if (count > 0)
 			{
-				mc.Plain("下周 ").Plain(weekdayStr[w - 1]).Plain(" 你共有 ").Plain(count).Plain(" 节课\n");
+				mc.Plain(fmt::format("下周 {} 你共有 {} 节课\n", weekdayStr[w - 1], count));
 				mc = mc + CoursesFormat(courses);
 			}
 			else
 			{
-				mc.Plain("下周 ").Plain(weekdayStr[w - 1]).Plain(" 你没有课");
+				mc.Plain(fmt::format("下周 {} 你没有课\n", weekdayStr[w - 1]));
 			}
 			m.Reply(mc);
 			std::this_thread::sleep_for(std::chrono::milliseconds(200));
