@@ -9,7 +9,7 @@ void CmdWeekCourses(Message m)
 {
 	if (m.MessageChain.GetPlainTextFirst() != "本周课表") return;
 
-	LOG(INFO) << "[" << m.Sender.ToInt64() << "] 使用 [本周课表] 指令";
+	LOG(INFO) << "[" << m.Sender << "] 使用 [本周课表] 指令";
 
 	const static string weekdayStr[7] = { "星期一","星期二","星期三","星期四","星期五","星期六","星期天" };
 	try
@@ -23,7 +23,7 @@ void CmdWeekCourses(Message m)
 			return;
 		}
 
-		m.Reply(MessageChain().Plain("本周是第 ").Plain(week).Plain(" 周"));
+		m.Reply(MessageChain().Plain(fmt::format("本周是第 {} 周", week)));
 		for (int w = 1; w <= 7; ++w)
 		{
 			auto courses = UserDb.GetCourses(m.Sender, week, w);
@@ -31,12 +31,12 @@ void CmdWeekCourses(Message m)
 			int count = courses.size();
 			if (count > 0)
 			{
-				mc.Plain("本周 ").Plain(weekdayStr[w - 1]).Plain(" 你共有 ").Plain(count).Plain(" 节课\n");
+				mc.Plain(fmt::format("本周 {} 你共有 {} 节课\n", weekdayStr[w - 1], count));
 				mc = mc + CoursesFormat(courses);
 			}
 			else
 			{
-				mc.Plain("本周 ").Plain(weekdayStr[w - 1]).Plain(" 你没有课");
+				mc.Plain(fmt::format("本周 {} 你没有课\n", weekdayStr[w - 1]));
 			}
 			m.Reply(mc);
 			std::this_thread::sleep_for(std::chrono::milliseconds(200));
@@ -45,14 +45,14 @@ void CmdWeekCourses(Message m)
 	}
 	catch (const std::exception& ex)
 	{
-		LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用 [本周课表] 指令时出现异常: " << ex.what();
+		LOG(ERROR) << "[" << m.Sender << "] 使用 [本周课表] 指令时出现异常: " << ex.what();
 		try
 		{
 			m.Reply(MessageChain().Plain("出现错误："s + ex.what()));
 		}
 		catch (const exception& ex)
 		{
-			LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用 [本周课表] 指令时出现异常: " << ex.what();
+			LOG(ERROR) << "[" << m.Sender << "] 使用 [本周课表] 指令时出现异常: " << ex.what();
 		}
 	}
 }
