@@ -12,7 +12,7 @@ void CmdSubscribeNews(Message m)
 
 		if (m.MessageChain.GetPlainTextFirst() == "订阅教务新闻")
 		{
-			LOG(INFO) << "[" << m.Sender.ToInt64() << "] 使用 [订阅教务新闻] 指令";
+			LOG(INFO) << "[" << m.Sender << "] 使用 [订阅教务新闻] 指令";
 
 			if (UserDb.GetSid(m.Sender).empty())
 			{
@@ -26,7 +26,7 @@ void CmdSubscribeNews(Message m)
 
 		if (m.MessageChain.GetPlainTextFirst() == "取消订阅教务新闻")
 		{
-			LOG(INFO) << "[" << m.Sender.ToInt64() << "] 使用 [取消订阅教务新闻] 指令";
+			LOG(INFO) << "[" << m.Sender << "] 使用 [取消订阅教务新闻] 指令";
 
 			if (UserDb.GetSid(m.Sender).empty())
 			{
@@ -40,14 +40,14 @@ void CmdSubscribeNews(Message m)
 	}
 	catch (const std::exception& ex)
 	{
-		LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用 [(取消)订阅教务新闻] 指令时出现异常: " << ex.what();
+		LOG(ERROR) << "[" << m.Sender << "] 使用 [(取消)订阅教务新闻] 指令时出现异常: " << ex.what();
 		try
 		{
 			m.Reply(MessageChain().Plain("出现错误："s + ex.what()));
 		}
 		catch (const exception& ex)
 		{
-			LOG(ERROR) << "[" << m.Sender.ToInt64() << "] 使用 [(取消)订阅教务新闻] 指令时出现异常: " << ex.what();
+			LOG(ERROR) << "[" << m.Sender << "] 使用 [(取消)订阅教务新闻] 指令时出现异常: " << ex.what();
 		}
 	}
 }
