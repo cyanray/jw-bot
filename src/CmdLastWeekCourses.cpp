@@ -1,13 +1,13 @@
 #include <iostream>
 #include <sstream>
+#include <fmt/core.h>
 #include "main.h"
 using namespace std;
 using namespace Cyan;
 
 void CmdLastWeekCourses(Message m)
 {
-	if (m.MessageChain.GetPlainTextFirst() != "上周课表")
-		return;
+	if (m.MessageChain.GetPlainTextFirst() != "上周课表") return;
 	const static string weekdayStr[7] = { "星期一","星期二","星期三","星期四","星期五","星期六","星期天" };
 	try
 	{
@@ -21,7 +21,7 @@ void CmdLastWeekCourses(Message m)
 			return;
 		}
 
-		m.Reply(MessageChain().Plain("上周是第 ").Plain(week).Plain(" 周"));
+		m.Reply(MessageChain().Plain(fmt::format("上周是第 {} 周", week)));
 		for (int w = 1; w <= 7; ++w)
 		{
 			auto courses = UserDb.GetCourses(m.Sender, week, w);
@@ -30,12 +30,12 @@ void CmdLastWeekCourses(Message m)
 
 			if (count > 0)
 			{
-				mc.Plain("上周 ").Plain(weekdayStr[w - 1]).Plain(" 你共有 ").Plain(count).Plain(" 节课\n");
+				mc.Plain(fmt::format("上周 {} 你共有 {} 节课\n", weekdayStr[w - 1], count));
 				mc = mc + CoursesFormat(courses);
 			}
 			else
 			{
-				mc.Plain("上周 ").Plain(weekdayStr[w - 1]).Plain(" 你没有课");
+				mc.Plain(fmt::format("上周 {} 你没有课\n", weekdayStr[w - 1]));
 			}
 			m.Reply(mc);
 			std::this_thread::sleep_for(std::chrono::milliseconds(200));
@@ -48,8 +48,6 @@ void CmdLastWeekCourses(Message m)
 		{
 			m.Reply(MessageChain().Plain("出现错误："s + ex.what()));
 		}
-		catch (...)
-		{
-		}
+		catch (...) {}
 	}
 }

@@ -7,6 +7,7 @@
 #include <mirai.h>
 #include <qzjw.h>
 #include <nlohmann/json.hpp>
+#include <fmt/core.h>
 #include <glog/logging.h>
 #undef ERROR		// hack: fu*k windows.h
 #include "database.h"
@@ -351,15 +352,7 @@ inline Cyan::MessageChain CoursesFormat(const vector<Cyan::UserDatabase::Course>
 	Cyan::MessageChain mc;
 	for (const auto& ele : courses)
 	{
-		mc
-			.Plain(idx++)
-			.Plain(". ")
-			.Plain(ele.Name)
-			.Plain("，")
-			.Plain(ele.Classroom)
-			.Plain("，")
-			.Plain(ele.Time)
-			.Plain("\n");
+		mc.Plain(fmt::format("{}. {}, {}, {}\n", idx++, ele.Name, ele.Classroom, ele.Time));
 	}
 	return mc;
 }
