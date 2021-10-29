@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <sstream>
 #include <iomanip>
+#include <fmt/core.h>
 #include "main.h"
 using namespace std;
 using namespace Cyan;
@@ -57,15 +58,9 @@ void CmdExamResult(Message m)
 		double GPA = 0, GPA_require_only = 0;
 		CalcGPA(exam_results, GPA, GPA_require_only);
 
-		stringstream ss1;
-		ss1 << fixed << setprecision(3) << GPA_require_only;
-		stringstream ss2;
-		ss2 << fixed << setprecision(3) << GPA;
-
 		MessageChain mc;
-		mc.Plain("平均学分绩点(排除校选)：").Plain(ss1.str()).Plain("\n");
-		mc.Plain("平均学分绩点(所有科目)：").Plain(ss2.str());
-
+		mc.Plain(fmt::format("平均学分绩点(排除校选)：{:.3f}\n", GPA_require_only));
+		mc.Plain(fmt::format("平均学分绩点(所有科目)：{:.3f}", GPA));
 		m.Reply(mc);
 	}
 	catch (const std::exception& ex)
@@ -74,8 +69,6 @@ void CmdExamResult(Message m)
 		{
 			m.Reply(MessageChain().Plain("查询成绩时出现错误："s + ex.what()));
 		}
-		catch (...)
-		{
-		}
+		catch (...) {}
 	}
 }
