@@ -42,7 +42,7 @@ void CmdTodayCourses(Message m)
 		// GetWeek()范围为[1,20]
 		int week = GetWeekOfSemester();			// 获取本学期第几周
 		int weekday = GetWeekToday();				// 获取今天是星期几
-		auto today_courses = UserDb.GetCourses(m.Sender, week, weekday);
+		auto today_courses = UserDb.GetCourses(qq, week, weekday);
 
 		MessageChain mc;
 		int count = today_courses.size();
