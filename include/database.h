@@ -152,54 +152,11 @@ namespace Cyan
 			else return -1;
 		}
 
-		int GetUserCount_17()
+		int GetUserCount(int grade)
 		{
 			vector<QQ_t> res;
-			SQLite::Statement sql(db_, "select COUNT(sid) from user_info where sid like '6317%'");
-			if (sql.executeStep())
-			{
-				return sql.getColumn(0);
-			}
-			else return -1;
-		}
-
-		int GetUserCount_18()
-		{
-			vector<QQ_t> res;
-			SQLite::Statement sql(db_, "select COUNT(sid) from user_info where sid like '6318%'");
-			if (sql.executeStep())
-			{
-				return sql.getColumn(0);
-			}
-			else return -1;
-		}
-
-		int GetUserCount_19()
-		{
-			vector<QQ_t> res;
-			SQLite::Statement sql(db_, "select COUNT(sid) from user_info where sid like '6319%'");
-			if (sql.executeStep())
-			{
-				return sql.getColumn(0);
-			}
-			else return -1;
-		}
-
-		int GetUserCount_20()
-		{
-			vector<QQ_t> res;
-			SQLite::Statement sql(db_, "select COUNT(sid) from user_info where sid like '6320%'");
-			if (sql.executeStep())
-			{
-				return sql.getColumn(0);
-			}
-			else return -1;
-		}
-
-		int GetUserCount_21()
-		{
-			vector<QQ_t> res;
-			SQLite::Statement sql(db_, "select COUNT(sid) from user_info where sid like '6321%'");
+			SQLite::Statement sql(db_, "select COUNT(sid) from user_info where sid like ?");
+			sql.bind(1, "63"s + std::to_string(grade) + "%"s);
 			if (sql.executeStep())
 			{
 				return sql.getColumn(0);
