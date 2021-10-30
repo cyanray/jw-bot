@@ -22,7 +22,7 @@ void CmdMakeFriend(Message m)
 		if (match.size() < 3)
 		{
 			LOG(ERROR) << "[" << m.Sender << "] 使用了不正确的 [交个朋友] 指令: " << msg_str;
-			m.Reply(MessageChain().Plain("没看懂你说的啥，试试：“交个朋友 <朋友的QQ号>”"));
+			m.Reply(MessageChain().Plain("没看懂你说的啥，试试：“交个朋友 朋友的QQ号”"));
 			return;
 		}
 
@@ -38,7 +38,14 @@ void CmdMakeFriend(Message m)
 
 		UserDb.UpdateFriendQQ(m.Sender, friend_qq);
 
-		m.Reply(MessageChain().Plain("成功啦！让对方也和你建立好友关系吧！"));
+		if (UserDb.GetFriendQQ(friend_qq) == m.Sender)
+		{
+			m.Reply(MessageChain().Plain("成功建立好友关系！可以互查课表、成绩了！\n试试：【课表!】、【查成绩!】、【第12周课表!】"));
+		}
+		else
+		{
+			m.Reply(MessageChain().Plain("成功啦！让对方也和你建立好友关系吧！双方建立好友关系之后就可以互查课表、成绩了！"));
+		}
 
 	}
 	catch (const std::exception& ex)
