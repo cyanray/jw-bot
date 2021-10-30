@@ -31,6 +31,7 @@
 3. sqlitecpp
 4. libcurl
 5. glog
+6. fmt
 
 ## 如何贡献
 请实名制加群 767473146。
