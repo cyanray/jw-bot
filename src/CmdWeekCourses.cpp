@@ -39,7 +39,7 @@ void CmdWeekCourses(Message m)
 		m.Reply(MessageChain().Plain(fmt::format("本周是第 {} 周", week)));
 		for (int w = 1; w <= 7; ++w)
 		{
-			auto courses = UserDb.GetCourses(m.Sender, week, w);
+			auto courses = UserDb.GetCourses(qq, week, w);
 			MessageChain mc;
 			int count = courses.size();
 			if (count > 0)
