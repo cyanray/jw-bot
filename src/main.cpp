@@ -63,9 +63,11 @@ int main(int argc, char* argv[])
 				{"AdminQQ", 100002},
 				{"JwUid", "631800000000"},
 				{"JwPassword", "pwd123456"},
-				{"FirstDayOfSemester", 1582473600ll},
+				{"FirstDayOfSemester", "2022-02-27"},
 				{"GoodMorningEnabled", true},
-				{"GoodMorningTriggerTime", 5}
+				{"GoodMorningTriggerTime", 5},
+				{"ThisSemester", json(nullptr)},
+				{"LastSemester", json(nullptr)}
 			};
 			config_file.clear();
 			config_file << AppConfig.dump(2, ' ');

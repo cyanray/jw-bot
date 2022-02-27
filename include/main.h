@@ -10,6 +10,7 @@
 #include <fmt/core.h>
 #include <glog/logging.h>
 #undef ERROR		// hack: fu*k windows.h
+#include <string_view>
 #include "database.h"
 
 /**
@@ -212,19 +213,20 @@ extern void CronJobNews(Cyan::MiraiBot& bot);
 extern void CronJobLoginJw(Cyan::MiraiBot& bot);
 
 /**
- * @brief 获取当前的日期(yyyy-MM-dd)
- * @return 
+ * @brief 获取当前的日期
+ * @return
 */
-inline string GetCurrentDate()
+inline string GetCurrentDate(std::string_view format = "%Y-%m-%d")
 {
 	std::time_t rawtime;
 	std::tm* timeinfo;
 	char buffer[64];
 	std::time(&rawtime);
 	timeinfo = std::localtime(&rawtime);
-	std::strftime(buffer, 64, "%Y-%m-%d", timeinfo);
+	std::strftime(buffer, 64, format.data(), timeinfo);
 	return string(buffer);
 }
+
 
 /**
  * @brief 获取明天的日期(yyyy-MM-dd)
@@ -248,13 +250,8 @@ inline string GetTomorrowDate()
 */
 inline int GetHour24()
 {
-	char buffer[4];
-	time_t timep;
-	struct tm* p;
-	time(&timep);
-	p = localtime(&timep);
-	strftime(buffer, 4, "%H", p);
-	return atoi(buffer);
+	string hour_str = GetCurrentDate("%H");
+	return atoi(hour_str.data());
 }
 
 /**
@@ -263,13 +260,18 @@ inline int GetHour24()
 */
 inline int GetYear()
 {
-	char buffer[8];
-	time_t timep;
-	struct tm* p;
-	time(&timep);
-	p = localtime(&timep);
-	strftime(buffer, 8, "%Y", p);
-	return atoi(buffer);
+	string hour_str = GetCurrentDate("%Y");
+	return atoi(hour_str.data());
+}
+
+/**
+ * @brief 获取当前是多少月份
+ * @return mm
+*/
+inline int GetMonth()
+{
+	string hour_str = GetCurrentDate("%m");
+	return atoi(hour_str.data());
 }
 
 /**
@@ -288,12 +290,31 @@ inline int GetWeekToday()
 }
 
 /**
+ * @brief 将日期时间转化为 time_t
+ * @param datetime Fotmat: 2019-08-22T10:55:23.000Z
+ * @return time_t
+*/
+inline time_t ParseDateTime(const string& datetime)
+{
+	std::tm t{};
+	std::istringstream ss(datetime);
+
+	ss >> std::get_time(&t, "%Y-%m-%d");
+	if (ss.fail()) {
+		throw std::runtime_error{ "failed to parse time string" };
+	}
+	std::time_t time_stamp = mktime(&t);
+	return time_stamp;
+}
+
+
+/**
  * @brief 根据配置项的开学日期计算今天的教学周次(week of semester)
  * @return 教学周次数值，取值范围：1~20
 */
 inline int GetWeekOfSemester()
 {
-	const static time_t first_day_of_semester = AppConfig["FirstDayOfSemester"].get<int64_t>();
+	const static time_t first_day_of_semester = ParseDateTime(AppConfig["FirstDayOfSemester"].get<string>());
 	time_t now;
 	time(&now);
 	long long diff_sec = (long long)difftime(now, first_day_of_semester);
@@ -308,7 +329,28 @@ inline int GetWeekOfSemester()
 */
 inline string GetThisSemester()
 {
-	return "2021-2022-1";	// TODO: calc by datetime
+	if (!AppConfig["ThisSemester"].is_null())
+	{
+		string value = AppConfig["ThisSemester"].get<string>();
+		if (!value.empty()) return value;
+	}
+	auto pattern = "{}-{}-{}";
+	int this_year = GetYear();
+	int last_year = this_year - 1;
+	int next_year = this_year + 1;
+	int this_month = GetMonth();
+	if (this_month == 1)
+	{
+		return fmt::format(pattern, last_year, this_year, 1);
+	}
+	if (this_month >= 8)
+	{
+		return fmt::format(pattern, this_year, next_year, 1);
+	}
+	else
+	{
+		return fmt::format(pattern, last_year, this_year, 2);
+	}
 }
 
 /**
@@ -317,7 +359,29 @@ inline string GetThisSemester()
 */
 inline string GetLastSemester()
 {
-	return "2020-2021-2";	// TODO: calc by datetime
+	if (!AppConfig["LastSemester"].is_null())
+	{
+		string value = AppConfig["LastSemester"].get<string>();
+		if (!value.empty()) return value;
+	}
+	auto pattern = "{}-{}-{}";
+	int this_year = GetYear();
+	int last_year = this_year - 1;
+	int next_year = this_year + 1;
+	int this_month = GetMonth();
+	if (this_month == 1)
+	{
+		return fmt::format(pattern, last_year - 1, last_year, 1);
+	}
+	if (this_month >= 8)
+
+	{
+		return fmt::format(pattern, last_year, this_year, 2);
+	}
+	else
+	{
+		return fmt::format(pattern, last_year, this_year, 1);
+	}
 }
 
 /**
