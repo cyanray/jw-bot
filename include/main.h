@@ -6,6 +6,7 @@
 #include <sstream>
 #include <mirai.h>
 #include <qzjw.h>
+#include <iomanip>
 #include <nlohmann/json.hpp>
 #include <fmt/core.h>
 #include <glog/logging.h>
@@ -334,22 +335,21 @@ inline string GetThisSemester()
 		string value = AppConfig["ThisSemester"].get<string>();
 		if (!value.empty()) return value;
 	}
-	auto pattern = "{}-{}-{}";
 	int this_year = GetYear();
 	int last_year = this_year - 1;
 	int next_year = this_year + 1;
 	int this_month = GetMonth();
 	if (this_month == 1)
 	{
-		return fmt::format(pattern, last_year, this_year, 1);
+		return fmt::format("{}-{}-{}", last_year, this_year, 1);
 	}
 	if (this_month >= 8)
 	{
-		return fmt::format(pattern, this_year, next_year, 1);
+		return fmt::format("{}-{}-{}", this_year, next_year, 1);
 	}
 	else
 	{
-		return fmt::format(pattern, last_year, this_year, 2);
+		return fmt::format("{}-{}-{}", last_year, this_year, 2);
 	}
 }
 
@@ -364,23 +364,22 @@ inline string GetLastSemester()
 		string value = AppConfig["LastSemester"].get<string>();
 		if (!value.empty()) return value;
 	}
-	auto pattern = "{}-{}-{}";
 	int this_year = GetYear();
 	int last_year = this_year - 1;
 	int next_year = this_year + 1;
 	int this_month = GetMonth();
 	if (this_month == 1)
 	{
-		return fmt::format(pattern, last_year - 1, last_year, 1);
+		return fmt::format("{}-{}-{}", last_year - 1, last_year, 1);
 	}
 	if (this_month >= 8)
 
 	{
-		return fmt::format(pattern, last_year, this_year, 2);
+		return fmt::format("{}-{}-{}", last_year, this_year, 2);
 	}
 	else
 	{
-		return fmt::format(pattern, last_year, this_year, 1);
+		return fmt::format("{}-{}-{}", last_year, this_year, 1);
 	}
 }
 
